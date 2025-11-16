@@ -105,7 +105,7 @@ export default function Home() {
 
       {/* Products */}
       <section className="section" aria-label="Popular products">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2>Popular picks</h2>
           <Link href="/products" style={{ 
             color: 'var(--brand)', 
@@ -119,91 +119,74 @@ export default function Home() {
             View all →
           </Link>
         </div>
-        <div className="grid">
+        <div className="product-grid">
           {/* Card 1 */}
-          <article className="card">
-            <div className="thumb">
+          <Link href="/product/graphic-tee-black" className="product-card">
+            <div className="product-image">
               <img src="https://images.unsplash.com/photo-1520975867597-0f8d7cc01f9b?q=80&w=900&auto=format&fit=crop" alt="Graphic Tee Black" />
-              <div className="quick-view">Quick View</div>
-            </div>
-            <div className="meta">
-              <div className="title">Graphic Tee — Black</div>
-              <div className="price">
-                <span className="now">₹699</span> 
-                <span className="old">₹999</span> 
-                <span className="badge">30% OFF</span>
-              </div>
-              <div className="actions">
-                <Link className="btn" href="/wishlist">
-                  <span>♡</span>
-                </Link>
-                <Link className="btn primary" href="/cart">Add to cart</Link>
+              <div className="product-overlay">
+                <div className="product-info">
+                  <h3 className="product-title">Graphic Tee</h3>
+                  <p className="product-subtitle">Black Edition</p>
+                  <div className="product-price">
+                    <span className="price-now">₹699</span>
+                    <span className="price-old">₹999</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </article>
+          </Link>
 
           {/* Card 2 */}
-          <article className="card">
-            <div className="thumb">
+          <Link href="/product/oversized-hoodie-sand" className="product-card">
+            <div className="product-image">
               <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=900&auto=format&fit=crop" alt="Oversized Hoodie Sand" />
-              <div className="quick-view">Quick View</div>
               <span className="trending-badge">🔥 Trending</span>
-            </div>
-            <div className="meta">
-              <div className="title">Oversized Hoodie — Sand</div>
-              <div className="price">
-                <span className="now">₹1,499</span> 
-                <span className="old">₹1,899</span>
-              </div>
-              <div className="actions">
-                <Link className="btn" href="/wishlist">
-                  <span>♡</span>
-                </Link>
-                <Link className="btn primary" href="/cart">Add to cart</Link>
+              <div className="product-overlay">
+                <div className="product-info">
+                  <h3 className="product-title">Oversized Hoodie</h3>
+                  <p className="product-subtitle">Sand</p>
+                  <div className="product-price">
+                    <span className="price-now">₹1,499</span>
+                    <span className="price-old">₹1,899</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </article>
+          </Link>
 
           {/* Card 3 */}
-          <article className="card">
-            <div className="thumb">
+          <Link href="/product/cargo-joggers-olive" className="product-card">
+            <div className="product-image">
               <img src="https://images.unsplash.com/photo-1516826957135-700dedea698c?q=80&w=900&auto=format&fit=crop" alt="Cargo Joggers Olive" />
-              <div className="quick-view">Quick View</div>
-            </div>
-            <div className="meta">
-              <div className="title">Cargo Joggers — Olive</div>
-              <div className="price">
-                <span className="now">₹1,199</span>
-              </div>
-              <div className="actions">
-                <Link className="btn" href="/wishlist">
-                  <span>♡</span>
-                </Link>
-                <Link className="btn primary" href="/cart">Add to cart</Link>
+              <div className="product-overlay">
+                <div className="product-info">
+                  <h3 className="product-title">Cargo Joggers</h3>
+                  <p className="product-subtitle">Olive</p>
+                  <div className="product-price">
+                    <span className="price-now">₹1,199</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </article>
+          </Link>
 
           {/* Card 4 */}
-          <article className="card">
-            <div className="thumb">
+          <Link href="/product/daily-backpack-slate" className="product-card">
+            <div className="product-image">
               <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?q=80&w=900&auto=format&fit=crop" alt="Daily Backpack Slate" />
-              <div className="quick-view">Quick View</div>
-            </div>
-            <div className="meta">
-              <div className="title">Daily Backpack — Slate</div>
-              <div className="price">
-                <span className="now">₹1,399</span> 
-                <span className="old">₹1,699</span>
-              </div>
-              <div className="actions">
-                <Link className="btn" href="/wishlist">
-                  <span>♡</span>
-                </Link>
-                <Link className="btn primary" href="/cart">Add to cart</Link>
+              <div className="product-overlay">
+                <div className="product-info">
+                  <h3 className="product-title">Daily Backpack</h3>
+                  <p className="product-subtitle">Slate Grey</p>
+                  <div className="product-price">
+                    <span className="price-now">₹1,399</span>
+                    <span className="price-old">₹1,699</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </article>
+          </Link>
         </div>
       </section>
     </>
