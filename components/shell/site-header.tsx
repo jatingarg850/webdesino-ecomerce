@@ -20,7 +20,7 @@ export function SiteHeader() {
           <Link href="/c/men">Men</Link>
           <Link href="/c/women">Women</Link>
           <Link href="/new">New</Link>
-          <Link href="/products?sale=true">Sale</Link>
+          <Link href="/products">Sale</Link>
         </nav>
         
         <div className="search">

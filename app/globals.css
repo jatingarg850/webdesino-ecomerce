@@ -409,3 +409,28 @@ header {
     flex: 1 1 100%;
   }
 }
+
+
+/* Filter Pills */
+.filter-pill {
+  padding: 8px 16px;
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 999px;
+  color: var(--sub);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.filter-pill:hover {
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+}
+
+.filter-pill.active {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #0b0b0c;
+  border-color: transparent;
+}
