@@ -1,29 +1,183 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { ShoppingBag, Search, User, Heart, Menu, X, MapPin, Gift } from "lucide-react";
 
 export function SiteHeader() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const cartCount = 0;
+
   return (
-    <header className="header-light">
-      <div className="wrap">
-        <div className="header-grid">
-          {/* Left Nav */}
-          <nav className="nav-left" aria-label="Primary">
-            <Link href="/c/men">Men</Link>
-            <Link href="/c/women">Women</Link>
-          </nav>
-          
-          {/* Center Logo */}
-          <Link className="brand-center" href="/">
-            <div className="brand-logo" aria-hidden="true"></div>
-            <span className="brand-name">webdesino</span>
-          </Link>
-          
-          {/* Right Nav */}
-          <nav className="nav-right" aria-label="Secondary">
-            <Link href="/new">New</Link>
-            <Link href="/products">Sale</Link>
-          </nav>
+    <>
+      {/* Top Banner */}
+      <div className="bg-black text-white text-center py-2 text-xs md:text-sm font-medium">
+        <div className="container flex items-center justify-center gap-4">
+          <Gift className="w-4 h-4" />
+          <span>Free Shipping on Orders Above ₹999 | COD Available</span>
         </div>
       </div>
-    </header>
+
+      {/* Main Header */}
+      <header className="sticky top-0 z-50 bg-white border-b shadow-sm">
+        <div className="container">
+          <div className="flex items-center justify-between py-4">
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2">
+              <div className="text-2xl md:text-3xl font-black tracking-tight">
+                WEBDESINO
+              </div>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-8">
+              <Link href="/men" className="text-sm font-semibold hover:text-red-600 transition-colors">
+                MEN
+              </Link>
+              <Link href="/women" className="text-sm font-semibold hover:text-red-600 transition-colors">
+                WOMEN
+              </Link>
+              <Link href="/kids" className="text-sm font-semibold hover:text-red-600 transition-colors">
+                KIDS
+              </Link>
+              <Link href="/brands" className="text-sm font-semibold hover:text-red-600 transition-colors">
+                BRANDS
+              </Link>
+              <Link href="/sale" className="text-sm font-semibold text-red-600 hover:text-red-700 transition-colors">
+                SALE
+              </Link>
+            </nav>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-3 md:gap-4">
+              {/* Search */}
+              <button
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Search"
+              >
+                <Search size={20} />
+              </button>
+
+              {/* Track Order */}
+              <Link
+                href="/track-order"
+                className="hidden md:flex items-center gap-1 text-sm hover:text-red-600 transition-colors"
+              >
+                <MapPin size={18} />
+              </Link>
+
+              {/* Account */}
+              <Link
+                href="/account"
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Account"
+              >
+                <User size={20} />
+              </Link>
+
+              {/* Wishlist */}
+              <Link
+                href="/wishlist"
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Wishlist"
+              >
+                <Heart size={20} />
+              </Link>
+
+              {/* Cart */}
+              <Link
+                href="/cart"
+                className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Cart"
+              >
+                <ShoppingBag size={20} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          {searchOpen && (
+            <div className="pb-4 animate-fade-in">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search for products, brands and more..."
+                  className="w-full px-4 py-3 pl-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  autoFocus
+                />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 bg-white animate-slide-in">
+          <div className="container py-6">
+            <div className="flex items-center justify-between mb-8">
+              <div className="text-2xl font-black">MENU</div>
+              <button onClick={() => setMobileMenuOpen(false)}>
+                <X size={24} />
+              </button>
+            </div>
+            <nav className="space-y-6">
+              <Link
+                href="/men"
+                className="block text-xl font-semibold hover:text-red-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                MEN
+              </Link>
+              <Link
+                href="/women"
+                className="block text-xl font-semibold hover:text-red-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                WOMEN
+              </Link>
+              <Link
+                href="/kids"
+                className="block text-xl font-semibold hover:text-red-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                KIDS
+              </Link>
+              <Link
+                href="/brands"
+                className="block text-xl font-semibold hover:text-red-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                BRANDS
+              </Link>
+              <Link
+                href="/sale"
+                className="block text-xl font-semibold text-red-600 hover:text-red-700 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                SALE
+              </Link>
+            </nav>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
