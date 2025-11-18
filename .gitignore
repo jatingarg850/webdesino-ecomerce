@@ -45,3 +45,13 @@ next-env.d.ts
 *.swp
 *.swo
 *~
+
+# Large files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.mp4
+*.mov
+*.avi
+*.mkv
