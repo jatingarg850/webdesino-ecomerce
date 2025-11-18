@@ -1,18 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight, SlidersHorizontal } from 'lucide-react';
+import dbConnect from '@/lib/mongodb';
+import Product from '@/models/Product';
 
-export default function MenPage() {
-  const products = [
-    { id: 1, name: 'Classic Cotton T-Shirt', price: 699, oldPrice: 999, image: '/clothes/vyjby_512.webp', badge: 'NEW' },
-    { id: 2, name: 'Premium Hoodie', price: 1299, oldPrice: 1799, image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg', badge: 'SALE' },
-    { id: 3, name: 'Casual Shirt', price: 899, oldPrice: 1299, image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg', badge: 'NEW' },
-    { id: 4, name: 'Formal Blazer', price: 2499, oldPrice: 3499, image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg', badge: 'TRENDING' },
-    { id: 5, name: 'Denim Jacket', price: 1799, oldPrice: 2499, image: '/clothes/junko-nakase-Q-72wa9-7Dg-unsplash.jpg', badge: 'SALE' },
-    { id: 6, name: 'Graphic Tee', price: 599, oldPrice: 899, image: '/clothes/vyjby_512.webp', badge: 'NEW' },
-    { id: 7, name: 'Winter Coat', price: 2999, oldPrice: 4499, image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg', badge: 'TRENDING' },
-    { id: 8, name: 'Polo Shirt', price: 799, oldPrice: 1199, image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg', badge: 'SALE' },
-  ];
+async function getProducts() {
+  try {
+    await dbConnect();
+    const products = await Product.find({ category: 'men' }).lean();
+    return JSON.parse(JSON.stringify(products));
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
+}
+
+export default async function MenPage() {
+  const products = await getProducts();
 
   return (
     <div className="min-h-screen bg-white">
@@ -73,39 +77,52 @@ export default function MenPage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="group"
-              >
-                <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3 bg-black text-white px-3 py-1 rounded-full text-xs font-bold">
-                    {product.badge}
+          {products.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {products.map((product: any) => (
+                <Link
+                  key={product._id}
+                  href={`/products/${product._id}`}
+                  className="group"
+                >
+                  <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
+                    <Image
+                      src={product.images[0] || '/clothes/vyjby_512.webp'}
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {product.badge && (
+                      <div className="absolute top-3 left-3 bg-black text-white px-3 py-1 rounded-full text-xs font-bold">
+                        {product.badge}
+                      </div>
+                    )}
+                    {product.discount && (
+                      <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        -{product.discount}%
+                      </div>
+                    )}
                   </div>
-                  <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
+                  <div>
+                    <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold">₹{product.price}</span>
+                      {product.oldPrice && (
+                        <span className="text-sm text-gray-500 line-through">₹{product.oldPrice}</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">₹{product.price}</span>
-                    <span className="text-sm text-gray-500 line-through">₹{product.oldPrice}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-xl">
+              <p className="text-gray-600 mb-4">No products available</p>
+              <code className="text-sm bg-gray-200 px-3 py-1 rounded">npm run seed</code>
+            </div>
+          )}
         </div>
       </section>
     </div>

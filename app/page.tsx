@@ -1,8 +1,24 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight, ArrowRight } from 'lucide-react';
+import dbConnect from '@/lib/mongodb';
+import Product from '@/models/Product';
 
-export default function Home() {
+async function getProducts() {
+  try {
+    await dbConnect();
+    const products = await Product.find({ featured: true }).limit(8).lean();
+    console.log('✓ Fetched products:', products.length);
+    return JSON.parse(JSON.stringify(products));
+  } catch (error) {
+    console.error('✗ Error fetching products:', error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const products = await getProducts();
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Full Width */}
@@ -27,7 +43,7 @@ export default function Home() {
                 </p>
                 <div className="flex gap-4">
                   <Link
-                    href="/new"
+                    href="/sale"
                     className="bg-black text-white px-8 py-4 rounded-md font-semibold hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
                   >
                     Shop Now
@@ -119,7 +135,7 @@ export default function Home() {
         <div className="container">
           <div className="flex items-center justify-between mb-12">
             <h2 className="text-3xl md:text-4xl font-black">TRENDING CATEGORIES</h2>
-            <Link href="/categories" className="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1">
+            <Link href="/men" className="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1">
               View All
               <ChevronRight size={16} />
             </Link>
@@ -127,17 +143,17 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[
-              { name: 'T-Shirts', href: '/c/tshirts', image: '/clothes/vyjby_512.webp' },
-              { name: 'Hoodies', href: '/c/hoodies', image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg' },
-              { name: 'Casual Wear', href: '/c/casual', image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg' },
-              { name: 'Formal', href: '/c/formal', image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg' },
-              { name: 'Dresses', href: '/c/dresses', image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg' },
-              { name: 'Designer', href: '/c/designer', image: '/clothes/two-fashion-designers-atelier-with-dress-form.jpg' },
-              { name: 'Accessories', href: '/c/accessories', image: '/clothes/junko-nakase-Q-72wa9-7Dg-unsplash.jpg' },
-              { name: 'Sportswear', href: '/c/sportswear', image: '/clothes/vyjby_512.webp' },
-            ].map((cat) => (
+              { name: 'T-Shirts', href: '/men', image: '/clothes/vyjby_512.webp' },
+              { name: 'Hoodies', href: '/men', image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg' },
+              { name: 'Casual Wear', href: '/men', image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg' },
+              { name: 'Formal', href: '/men', image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg' },
+              { name: 'Dresses', href: '/women', image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg' },
+              { name: 'Designer', href: '/brands', image: '/clothes/two-fashion-designers-atelier-with-dress-form.jpg' },
+              { name: 'Accessories', href: '/men', image: '/clothes/junko-nakase-Q-72wa9-7Dg-unsplash.jpg' },
+              { name: 'Sportswear', href: '/kids', image: '/clothes/vyjby_512.webp' },
+            ].map((cat, index) => (
               <Link
-                key={cat.href}
+                key={`${cat.name}-${index}`}
                 href={cat.href}
                 className="group relative h-48 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
@@ -157,59 +173,63 @@ export default function Home() {
         </div>
       </section>
 
-      {/* New Arrivals */}
+      {/* New Arrivals - From Database */}
       <section className="py-16 md:py-20">
         <div className="container">
           <div className="flex items-center justify-between mb-12">
             <h2 className="text-3xl md:text-4xl font-black">NEW ARRIVALS</h2>
-            <Link href="/new" className="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1">
+            <Link href="/men" className="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1">
               View All
               <ChevronRight size={16} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {[
-              { id: 1, image: '/clothes/vyjby_512.webp', name: 'Premium Cotton T-Shirt', price: 699, oldPrice: 999 },
-              { id: 2, image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg', name: 'Casual Hoodie', price: 1299, oldPrice: 1799 },
-              { id: 3, image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg', name: 'Summer Shirt', price: 899, oldPrice: 1299 },
-              { id: 4, image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg', name: 'Formal Blazer', price: 2499, oldPrice: 3499 },
-              { id: 5, image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg', name: 'Designer Dress', price: 1999, oldPrice: 2999 },
-              { id: 6, image: '/clothes/junko-nakase-Q-72wa9-7Dg-unsplash.jpg', name: 'Stylish Jacket', price: 1799, oldPrice: 2499 },
-              { id: 7, image: '/clothes/vyjby_512.webp', name: 'Graphic Tee', price: 599, oldPrice: 899 },
-              { id: 8, image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg', name: 'Winter Coat', price: 2999, oldPrice: 4499 },
-            ].map((item) => (
-              <Link
-                key={item.id}
-                href={`/products/${item.id}`}
-                className="group"
-              >
-                <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3 bg-black text-white px-3 py-1 rounded-full text-xs font-bold">
-                    NEW
+          {products.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {products.map((product: any) => (
+                <Link
+                  key={product._id}
+                  href={`/products/${product._id}`}
+                  className="group"
+                >
+                  <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
+                    <Image
+                      src={product.images[0] || '/clothes/vyjby_512.webp'}
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {product.badge && (
+                      <div className="absolute top-3 left-3 bg-black text-white px-3 py-1 rounded-full text-xs font-bold">
+                        {product.badge}
+                      </div>
+                    )}
+                    {product.discount && (
+                      <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        -{product.discount}%
+                      </div>
+                    )}
                   </div>
-                  <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    -{Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100)}%
+                  <div>
+                    <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-red-600 transition-colors">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold">₹{product.price}</span>
+                      {product.oldPrice && (
+                        <span className="text-sm text-gray-500 line-through">₹{product.oldPrice}</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-red-600 transition-colors">
-                    {item.name}
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">₹{item.price}</span>
-                    <span className="text-sm text-gray-500 line-through">₹{item.oldPrice}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-xl">
+              <p className="text-gray-600">No products available. Run the seed script to add products.</p>
+              <code className="text-sm bg-gray-200 px-3 py-1 rounded mt-2 inline-block">npm run seed</code>
+            </div>
+          )}
         </div>
       </section>
 
@@ -230,7 +250,7 @@ export default function Home() {
             Homegrown & Proud Since 2012
           </p>
           <Link
-            href="/about"
+            href="/brands"
             className="inline-block bg-white text-black px-8 py-4 rounded-md font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
           >
             Our Story

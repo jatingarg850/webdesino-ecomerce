@@ -162,6 +162,9 @@ export function SiteFooter() {
               <Link href="/cookies" className="hover:text-white transition-colors">
                 Cookie Policy
               </Link>
+              <Link href="/admin" className="hover:text-red-400 transition-colors">
+                Admin
+              </Link>
             </div>
           </div>
         </div>

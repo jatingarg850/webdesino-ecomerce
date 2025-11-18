@@ -1,13 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { ShoppingBag, Search, User, Heart, Menu, X, MapPin, Gift } from "lucide-react";
 
+import { useCartStore } from "@/lib/store";
+
 export function SiteHeader() {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const cartCount = 0;
+  const [searchQuery, setSearchQuery] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const cartCount = useCartStore((state) => state.getItemCount());
+
+  // Check if user is logged in
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
 
   return (
     <>
@@ -80,10 +103,14 @@ export function SiteHeader() {
               {/* Account */}
               <Link
                 href="/account"
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
                 aria-label="Account"
+                title={user ? `Logged in as ${user.name}` : 'Account'}
               >
                 <User size={20} />
+                {user && (
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+                )}
               </Link>
 
               {/* Wishlist */}
@@ -114,15 +141,17 @@ export function SiteHeader() {
           {/* Search Bar */}
           {searchOpen && (
             <div className="pb-4 animate-fade-in">
-              <div className="relative">
+              <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search for products, brands and more..."
                   className="w-full px-4 py-3 pl-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                   autoFocus
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-              </div>
+              </form>
             </div>
           )}
         </div>
