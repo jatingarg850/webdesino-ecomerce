@@ -13,7 +13,13 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
   const cartCount = useCartStore((state) => state.getItemCount());
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Check if user is logged in
   useEffect(() => {
@@ -129,7 +135,7 @@ export function SiteHeader() {
                 aria-label="Cart"
               >
                 <ShoppingBag size={20} />
-                {cartCount > 0 && (
+                {mounted && cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
                     {cartCount}
                   </span>

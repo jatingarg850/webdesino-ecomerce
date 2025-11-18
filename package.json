@@ -8,16 +8,20 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed.ts",
-    "seed:clothing": "tsx scripts/seed-clothing.ts"
+    "seed:clothing": "tsx scripts/seed-clothing.ts",
+    "create-admin": "node scripts/create-admin.mjs"
   },
   "dependencies": {
     "@stripe/stripe-js": "^8.4.0",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.8.0",
+    "dotenv": "^17.2.3",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.553.0",
     "mongoose": "^8.19.4",
     "next": "16.0.3",
     "next-auth": "^4.24.13",
+    "next-cloudinary": "^6.17.5",
     "nodemailer": "^7.0.10",
     "razorpay": "^2.9.6",
     "react": "19.2.0",

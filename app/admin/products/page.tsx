@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Plus, Edit, Trash2, Search, X } from 'lucide-react';
+import ImageUpload from '@/components/admin/image-upload';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -19,7 +20,7 @@ export default function AdminProductsPage() {
     oldPrice: '',
     category: 'men',
     subcategory: '',
-    images: '',
+    images: [] as string[],
     sizes: '',
     colors: '',
     inStock: true,
@@ -68,7 +69,7 @@ export default function AdminProductsPage() {
         price: parseFloat(formData.price),
         oldPrice: formData.oldPrice ? parseFloat(formData.oldPrice) : undefined,
         discount: formData.discount ? parseFloat(formData.discount) : undefined,
-        images: formData.images.split(',').map(img => img.trim()),
+        images: formData.images,
         sizes: formData.sizes.split(',').map(size => size.trim()),
         colors: formData.colors.split(',').map(color => color.trim()),
         badge: formData.badge || undefined,
@@ -115,7 +116,7 @@ export default function AdminProductsPage() {
       oldPrice: product.oldPrice?.toString() || '',
       category: product.category,
       subcategory: product.subcategory,
-      images: product.images.join(', '),
+      images: product.images || [],
       sizes: product.sizes.join(', '),
       colors: product.colors.join(', '),
       inStock: product.inStock,
@@ -156,7 +157,7 @@ export default function AdminProductsPage() {
       oldPrice: '',
       category: 'men',
       subcategory: '',
-      images: '',
+      images: [],
       sizes: '',
       colors: '',
       inStock: true,
@@ -362,14 +363,11 @@ export default function AdminProductsPage() {
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold mb-2">Images (comma separated URLs) *</label>
-                  <input
-                    type="text"
-                    required
+                  <label className="block text-sm font-semibold mb-2">Product Images *</label>
+                  <ImageUpload
                     value={formData.images}
-                    onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="/clothes/image1.jpg, /clothes/image2.jpg"
+                    onChange={(urls) => setFormData({ ...formData, images: urls })}
+                    maxImages={5}
                   />
                 </div>
 

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useCartStore } from '@/lib/store';
 import { AuthModal } from '@/components/auth/auth-modal';
+import { Toast } from '@/components/ui/toast';
+import { config } from '@/lib/config';
 import Script from 'next/script';
 
 declare global {
@@ -20,6 +22,8 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>('ONLINE');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [error, setError] = useState('');
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -31,20 +35,22 @@ export default function CheckoutPage() {
     pincode: '',
   });
 
-  // Check authentication on mount
+  // Check authentication and cart on mount
   useEffect(() => {
-    // TODO: Replace with actual auth check
-    const checkAuth = () => {
-      // For now, check if user data exists in localStorage
-      const userData = localStorage.getItem('user');
-      if (!userData) {
-        setShowAuthModal(true);
-      } else {
-        setIsAuthenticated(true);
-      }
-    };
-    checkAuth();
-  }, []);
+    // Check if cart is empty
+    if (items.length === 0) {
+      router.push('/cart');
+      return;
+    }
+
+    // Check if user is logged in
+    const userData = localStorage.getItem('user');
+    if (!userData) {
+      setShowAuthModal(true);
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, [items.length, router]);
 
   const subtotal = getTotal();
   const shipping = subtotal > 999 ? 0 : 99;
@@ -59,43 +65,65 @@ export default function CheckoutPage() {
 
   const handlePayment = async () => {
     if (!formData.name || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.pincode) {
-      alert('Please fill all required fields');
+      setError('Please fill all required fields');
       return;
     }
 
     setLoading(true);
+    setError('');
 
     try {
       if (paymentMethod === 'COD') {
+        // Get user ID if logged in
+        const userData = localStorage.getItem('user');
+        const userId = userData ? JSON.parse(userData).id : null;
+
         // Create order directly for COD
+        const orderData: any = {
+          items: items.map(item => ({
+            productId: item.id,
+            name: item.name,
+            image: item.image,
+            price: item.price,
+            quantity: item.quantity,
+            size: item.size,
+            color: item.color,
+          })),
+          shippingAddress: formData,
+          paymentMethod: 'COD',
+          paymentStatus: 'PENDING',
+          orderStatus: 'PENDING',
+          subtotal,
+          shipping,
+          total,
+        };
+
+        // Only add userId if user is logged in
+        if (userId) {
+          orderData.userId = userId;
+        }
+
         const orderResponse = await fetch('/api/orders', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: 'guest', // Replace with actual user ID when auth is implemented
-            items: items.map(item => ({
-              productId: item.id,
-              name: item.name,
-              image: item.image,
-              price: item.price,
-              quantity: item.quantity,
-              size: item.size,
-              color: item.color,
-            })),
-            shippingAddress: formData,
-            paymentMethod: 'COD',
-            paymentStatus: 'PENDING',
-            orderStatus: 'PENDING',
-            subtotal,
-            shipping,
-            total,
-          }),
+          body: JSON.stringify(orderData),
         });
+
+        if (!orderResponse.ok) {
+          throw new Error('Failed to create order');
+        }
 
         const { order } = await orderResponse.json();
         
-        clearCart();
-        router.push(`/order-success?orderId=${order._id}`);
+        if (order && order._id) {
+          setToast({ message: 'Order placed successfully!', type: 'success' });
+          clearCart();
+          setTimeout(() => {
+            router.push(`/order-success?orderId=${order._id}`);
+          }, 1000);
+        } else {
+          throw new Error('Invalid order response');
+        }
       } else {
         // Create Razorpay order
         const response = await fetch('/api/payment/create-order', {
@@ -111,33 +139,34 @@ export default function CheckoutPage() {
         const { order } = await response.json();
 
         const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          key: config.razorpay.keyId,
           amount: order.amount,
           currency: order.currency,
           name: 'Webdesino',
           description: 'Purchase from Webdesino Store',
           order_id: order.id,
           handler: async function (response: any) {
-            // Verify payment
-            const verifyResponse = await fetch('/api/payment/verify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
-
-            const verifyData = await verifyResponse.json();
-
-            if (verifyData.verified) {
-              // Create order in database
-              const orderResponse = await fetch('/api/orders', {
+            try {
+              // Verify payment
+              const verifyResponse = await fetch('/api/payment/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  userId: 'guest',
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                }),
+              });
+
+              const verifyData = await verifyResponse.json();
+
+              if (verifyData.verified) {
+                // Get user ID if logged in
+                const userData = localStorage.getItem('user');
+                const userId = userData ? JSON.parse(userData).id : null;
+
+                // Create order in database
+                const orderData: any = {
                   items: items.map(item => ({
                     productId: item.id,
                     name: item.name,
@@ -151,18 +180,53 @@ export default function CheckoutPage() {
                   paymentMethod: 'ONLINE',
                   paymentStatus: 'PAID',
                   orderStatus: 'CONFIRMED',
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id,
                   subtotal,
                   shipping,
                   total,
-                }),
-              });
+                };
 
-              const { order: dbOrder } = await orderResponse.json();
-              
-              clearCart();
-              router.push(`/order-success?orderId=${dbOrder._id}`);
-            } else {
-              alert('Payment verification failed');
+                // Only add userId if user is logged in
+                if (userId) {
+                  orderData.userId = userId;
+                }
+
+                const orderResponse = await fetch('/api/orders', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(orderData),
+                });
+
+                if (!orderResponse.ok) {
+                  throw new Error('Failed to create order');
+                }
+
+                const { order: dbOrder } = await orderResponse.json();
+                
+                if (dbOrder && dbOrder._id) {
+                  setToast({ message: 'Payment successful!', type: 'success' });
+                  clearCart();
+                  setTimeout(() => {
+                    router.push(`/order-success?orderId=${dbOrder._id}`);
+                  }, 1000);
+                } else {
+                  throw new Error('Invalid order response');
+                }
+              } else {
+                setToast({ message: 'Payment verification failed. Please contact support.', type: 'error' });
+                setLoading(false);
+              }
+            } catch (error) {
+              console.error('Payment handler error:', error);
+              setToast({ message: 'Failed to process payment. Please contact support.', type: 'error' });
+              setLoading(false);
+            }
+          },
+          modal: {
+            ondismiss: function() {
+              setLoading(false);
+              setToast({ message: 'Payment cancelled', type: 'info' });
             }
           },
           prefill: {
@@ -178,22 +242,37 @@ export default function CheckoutPage() {
         const razorpay = new window.Razorpay(options);
         razorpay.open();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Payment error:', error);
-      alert('Payment failed. Please try again.');
-    } finally {
+      setError(error.message || 'Payment failed. Please try again.');
       setLoading(false);
     }
   };
 
+  // Show loading while redirecting if cart is empty
   if (items.length === 0) {
-    router.push('/cart');
-    return null;
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-black mx-auto mb-4"></div>
+          <div className="text-gray-600">Redirecting...</div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+      
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
       
       {/* Auth Modal */}
       <AuthModal 
@@ -360,6 +439,12 @@ export default function CheckoutPage() {
                     <span className="font-black">₹{total}</span>
                   </div>
                 </div>
+
+                {error && (
+                  <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                    {error}
+                  </div>
+                )}
 
                 <button
                   onClick={handlePayment}

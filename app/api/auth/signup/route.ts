@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
+      role: 'USER', // Default role
     });
 
     // Return user data (without password)
@@ -48,6 +49,7 @@ export async function POST(request: NextRequest) {
       id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
     };
 
     return NextResponse.json({

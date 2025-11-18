@@ -1,219 +1,198 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  DollarSign,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  Truck
-} from 'lucide-react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    totalProducts: 0,
-    totalOrders: 0,
-    totalUsers: 0,
-    totalRevenue: 0,
-    pendingOrders: 0,
-    confirmedOrders: 0,
-    shippedOrders: 0,
-    deliveredOrders: 0,
+export default function AdminLogin() {
+  const router = useRouter();
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: '',
   });
-  const [recentOrders, setRecentOrders] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-  const fetchDashboardData = async () => {
     try {
-      // Fetch products
-      const productsRes = await fetch('/api/products');
-      const productsData = await productsRes.json();
-      
-      // Fetch all orders (you'll need to create this endpoint)
-      const ordersRes = await fetch('/api/admin/orders');
-      const ordersData = await ordersRes.json();
-      
-      // Fetch users
-      const usersRes = await fetch('/api/admin/users');
-      const usersData = await usersRes.json();
+      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup';
+      const body = isLogin 
+        ? { email: formData.email, password: formData.password }
+        : { email: formData.email, password: formData.password, name: formData.name };
 
-      const orders = ordersData.orders || [];
-      
-      setStats({
-        totalProducts: productsData.products?.length || 0,
-        totalOrders: orders.length,
-        totalUsers: usersData.users?.length || 0,
-        totalRevenue: orders.reduce((sum: number, order: any) => sum + order.total, 0),
-        pendingOrders: orders.filter((o: any) => o.orderStatus === 'PENDING').length,
-        confirmedOrders: orders.filter((o: any) => o.orderStatus === 'CONFIRMED').length,
-        shippedOrders: orders.filter((o: any) => o.orderStatus === 'SHIPPED').length,
-        deliveredOrders: orders.filter((o: any) => o.orderStatus === 'DELIVERED').length,
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       });
 
-      setRecentOrders(orders.slice(0, 5));
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-    } finally {
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Authentication failed');
+      }
+
+      // Check if user is admin
+      if (data.user?.role !== 'ADMIN') {
+        setError('Access denied. Admin privileges required.');
+        // Logout the user
+        await fetch('/api/auth/logout', { method: 'POST' });
+        setLoading(false);
+        return;
+      }
+
+      // Store admin session
+      localStorage.setItem('adminUser', JSON.stringify(data.user));
+      
+      // Redirect to admin dashboard
+      router.push('/admin/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="p-8 flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-black mx-auto mb-4"></div>
-          <div className="text-gray-600">Loading dashboard...</div>
-        </div>
-      </div>
-    );
-  }
-
-  const statCards = [
-    { 
-      label: 'Total Revenue', 
-      value: `₹${stats.totalRevenue.toLocaleString()}`, 
-      icon: DollarSign, 
-      color: 'bg-green-500',
-      link: '/admin/orders'
-    },
-    { 
-      label: 'Total Orders', 
-      value: stats.totalOrders, 
-      icon: ShoppingCart, 
-      color: 'bg-blue-500',
-      link: '/admin/orders'
-    },
-    { 
-      label: 'Total Products', 
-      value: stats.totalProducts, 
-      icon: Package, 
-      color: 'bg-purple-500',
-      link: '/admin/products'
-    },
-    { 
-      label: 'Total Users', 
-      value: stats.totalUsers, 
-      icon: Users, 
-      color: 'bg-orange-500',
-      link: '/admin/users'
-    },
-  ];
-
-  const orderStatusCards = [
-    { label: 'Pending', value: stats.pendingOrders, icon: Clock, color: 'bg-yellow-500' },
-    { label: 'Confirmed', value: stats.confirmedOrders, icon: CheckCircle, color: 'bg-blue-500' },
-    { label: 'Shipped', value: stats.shippedOrders, icon: Truck, color: 'bg-purple-500' },
-    { label: 'Delivered', value: stats.deliveredOrders, icon: CheckCircle, color: 'bg-green-500' },
-  ];
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-black mb-2">Dashboard</h1>
-        <p className="text-gray-600">Welcome to your admin panel</p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+      <div className="w-full max-w-md">
+        {/* Logo/Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-black rounded-2xl mb-4">
+            <Lock className="text-white" size={32} />
+          </div>
+          <h1 className="text-3xl font-black mb-2">Admin Portal</h1>
+          <p className="text-gray-600">
+            {isLogin ? 'Sign in to access the dashboard' : 'Create your admin account'}
+          </p>
+          <p className="text-xs text-gray-500 mt-2">
+            Default: admin@webdesino.com / admin123
+          </p>
+        </div>
 
-      {/* Main Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {statCards.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Link
-              key={index}
-              href={stat.link}
-              className="bg-white rounded-xl p-6 border hover:shadow-lg transition"
+        {/* Login/Signup Form */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 border">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name field (only for signup) */}
+            {!isLogin && (
+              <div>
+                <label className="block text-sm font-semibold mb-2">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required={!isLogin}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  placeholder="Enter your name"
+                />
+              </div>
+            )}
+
+            {/* Email field */}
+            <div>
+              <label className="block text-sm font-semibold mb-2">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-11 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  placeholder="admin@example.com"
+                />
+              </div>
+            </div>
+
+            {/* Password field */}
+            <div>
+              <label className="block text-sm font-semibold mb-2">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-11 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Error message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center text-white`}>
-                  <Icon size={24} />
-                </div>
-                <TrendingUp className="text-green-500" size={20} />
-              </div>
-              <div className="text-3xl font-black mb-1">{stat.value}</div>
-              <div className="text-gray-600 text-sm">{stat.label}</div>
-            </Link>
-          );
-        })}
-      </div>
-
-      {/* Order Status */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Order Status Overview</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {orderStatusCards.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <div key={index} className="bg-white rounded-lg p-4 border">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`${stat.color} w-10 h-10 rounded-lg flex items-center justify-center text-white`}>
-                    <Icon size={20} />
-                  </div>
-                  <div className="text-2xl font-black">{stat.value}</div>
-                </div>
-                <div className="text-gray-600 text-sm">{stat.label}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Recent Orders */}
-      <div className="bg-white rounded-xl border">
-        <div className="p-6 border-b flex justify-between items-center">
-          <h2 className="text-xl font-bold">Recent Orders</h2>
-          <Link href="/admin/orders" className="text-blue-600 hover:text-blue-700 font-semibold text-sm">
-            View All
-          </Link>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Order #</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Total</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {recentOrders.length > 0 ? (
-                recentOrders.map((order) => (
-                  <tr key={order._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-semibold">{order.orderNumber}</td>
-                    <td className="px-6 py-4 text-sm">{order.shippingAddress.name}</td>
-                    <td className="px-6 py-4 text-sm">{new Date(order.createdAt).toLocaleDateString()}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        order.orderStatus === 'DELIVERED' ? 'bg-green-100 text-green-700' :
-                        order.orderStatus === 'SHIPPED' ? 'bg-blue-100 text-blue-700' :
-                        order.orderStatus === 'CONFIRMED' ? 'bg-purple-100 text-purple-700' :
-                        'bg-yellow-100 text-yellow-700'
-                      }`}>
-                        {order.orderStatus}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm font-bold">₹{order.total}</td>
-                  </tr>
-                ))
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Processing...
+                </span>
               ) : (
-                <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                    No orders yet
-                  </td>
-                </tr>
+                isLogin ? 'Sign In' : 'Create Account'
               )}
-            </tbody>
-          </table>
+            </button>
+          </form>
+
+          {/* Toggle between login/signup */}
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setError('');
+                setFormData({ email: '', password: '', name: '' });
+              }}
+              className="text-sm text-gray-600 hover:text-black"
+            >
+              {isLogin ? (
+                <>
+                  Don't have an account?{' '}
+                  <span className="font-semibold">Sign up</span>
+                </>
+              ) : (
+                <>
+                  Already have an account?{' '}
+                  <span className="font-semibold">Sign in</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Info note */}
+        <div className="mt-6 text-center text-sm text-gray-500">
+          <p>🔒 This area is restricted to administrators only</p>
         </div>
       </div>
     </div>

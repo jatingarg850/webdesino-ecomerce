@@ -25,36 +25,45 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
+    // Skip auth check for login page
+    if (pathname === '/admin') {
+      return;
+    }
+
     // Check if user is admin
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem('adminUser');
     if (!userData) {
-      router.push('/');
+      router.push('/admin');
       return;
     }
     
     const user = JSON.parse(userData);
-    // For demo, check if email contains 'admin' or set a specific admin email
-    if (!user.email.includes('admin')) {
-      alert('Access denied. Admin only.');
-      router.push('/');
+    if (user.role !== 'ADMIN') {
+      router.push('/admin');
       return;
     }
     
     setAdmin(user);
-  }, [router]);
+  }, [router, pathname]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    router.push('/');
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    localStorage.removeItem('adminUser');
+    router.push('/admin');
   };
 
   const navItems = [
-    { href: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
+    { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { href: '/admin/products', icon: Package, label: 'Products' },
     { href: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
     { href: '/admin/users', icon: Users, label: 'Users' },
     { href: '/admin/settings', icon: Settings, label: 'Settings' },
   ];
+
+  // Show login page without layout
+  if (pathname === '/admin') {
+    return <>{children}</>;
+  }
 
   if (!admin) {
     return (
