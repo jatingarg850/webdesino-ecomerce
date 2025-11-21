@@ -1,120 +1,67 @@
-# Cloudinary Image Upload Setup
+# Cloudinary Setup Guide
 
-## Overview
+## Step 1: Create Cloudinary Account
 
-Your e-commerce store now has Cloudinary integration for seamless image uploads in the admin panel.
+1. Go to [Cloudinary](https://cloudinary.com/) and sign up for a free account
+2. After signing up, go to your Dashboard
+3. Copy these credentials:
+   - Cloud Name
+   - API Key
+   - API Secret
 
-## Features
+## Step 2: Add Environment Variables
 
-✅ **Drag & Drop Upload**: Upload multiple images at once
-✅ **Image Preview**: See uploaded images before saving
-✅ **Delete Images**: Remove unwanted images easily
-✅ **Cloudinary CDN**: Fast image delivery worldwide
-✅ **Auto Optimization**: Images are automatically optimized
-
-## Configuration
-
-Cloudinary credentials are already configured in `.env.local`:
+Add these to your `.env.local` file:
 
 ```env
-CLOUDINARY_CLOUD_NAME=dcu5kywhg
-CLOUDINARY_API_KEY=659615312136135
-CLOUDINARY_API_SECRET=I_TyfZOq3j_7gDbSy3eXnE5Ck-w
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dcu5kywhg
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
-## How to Use
+Also add them to your Render environment variables.
 
-### Adding Products with Images
+## Step 3: Upload Existing Images
 
-1. Go to `/admin/dashboard` (login with admin credentials)
-2. Navigate to **Products** section
-3. Click **Add Product** button
-4. Fill in product details
-5. In the **Product Images** section:
-   - Click the upload box
-   - Select up to 5 images
-   - Images will automatically upload to Cloudinary
-   - Preview uploaded images
-   - Remove any image by hovering and clicking the X button
-6. Complete other product details
-7. Click **Create Product**
+Run this command to upload all images from `public/ecom-clothes-photos` to Cloudinary:
 
-### Editing Product Images
-
-1. Click **Edit** on any product
-2. Existing images will be displayed
-3. Add more images or remove existing ones
-4. Click **Update Product**
-
-## Image Upload Component
-
-The `ImageUpload` component is located at:
-```
-components/admin/image-upload.tsx
+```bash
+npx tsx scripts/upload-images-to-cloudinary.ts
 ```
 
-### Props
+This will:
+- Upload all images to Cloudinary
+- Create a `image-url-mapping.json` file with old path → new URL mapping
+- Display the new Cloudinary URLs
 
-- `value`: Array of image URLs
-- `onChange`: Callback function when images change
-- `maxImages`: Maximum number of images (default: 5)
+## Step 4: Update Database
 
-### Usage Example
+You'll need to update your product images in the database with the new Cloudinary URLs.
 
-```tsx
-<ImageUpload
-  value={formData.images}
-  onChange={(urls) => setFormData({ ...formData, images: urls })}
-  maxImages={5}
-/>
-```
+Option 1: Manual update through admin panel
+- Go to admin panel
+- Edit each product
+- Replace image URLs with Cloudinary URLs from the mapping file
 
-## API Endpoints
+Option 2: Create a migration script (recommended for many products)
 
-### Upload Image
-- **Endpoint**: `POST /api/upload`
-- **Body**: FormData with `file` and optional `folder`
-- **Response**: `{ success: true, url: string, publicId: string }`
+## Step 5: Clean Up
 
-## Cloudinary Folder Structure
-
-All images are uploaded to:
-```
-webdesino/products/
-```
-
-## Image Display
-
-Uploaded images are automatically displayed on:
-- Product listing pages (`/men`, `/women`, `/kids`)
-- Product detail pages (`/products/[id]`)
-- Admin product management
-- Cart and wishlist
+After confirming everything works:
+1. Delete the `public/ecom-clothes-photos` folder
+2. Commit and push to GitHub
+3. Redeploy on Render
 
 ## Benefits
 
-1. **Fast Loading**: Cloudinary CDN ensures fast image delivery
-2. **Auto Optimization**: Images are automatically compressed
-3. **Responsive**: Images adapt to different screen sizes
-4. **Secure**: Images are stored securely on Cloudinary
-5. **Scalable**: No storage limits on your server
+✅ Reduced deployment size (no large images in repo)
+✅ Faster image loading with Cloudinary CDN
+✅ Automatic image optimization
+✅ Image transformations on-the-fly
+✅ Better performance on Render free tier
 
-## Troubleshooting
+## Cloudinary Free Tier Limits
 
-### Upload Fails
-- Check internet connection
-- Verify Cloudinary credentials in `.env.local`
-- Check file size (max 10MB recommended)
-
-### Images Not Displaying
-- Verify image URLs are saved in database
-- Check browser console for errors
-- Ensure Cloudinary cloud name is correct
-
-## Next Steps
-
-- Consider adding image cropping/editing features
-- Implement image compression before upload
-- Add support for video uploads
-- Create image galleries for products
+- 25 GB storage
+- 25 GB bandwidth/month
+- Perfect for small to medium e-commerce stores

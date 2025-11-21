@@ -30,7 +30,7 @@ export default function ImageUpload({ value = [], onChange, maxImages = 5 }: Ima
         formData.append('file', file);
         formData.append('folder', 'products');
 
-        const response = await fetch('/api/upload', {
+        const response = await fetch('/api/upload-cloudinary', {
           method: 'POST',
           body: formData,
         });
