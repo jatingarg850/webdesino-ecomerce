@@ -17,7 +17,7 @@ async function getSaleProducts() {
       ]
     }).lean();
     
-    return products.map(product => ({
+    return products.map((product: any) => ({
       ...product,
       _id: product._id.toString(),
     }));

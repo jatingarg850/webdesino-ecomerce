@@ -16,14 +16,15 @@ async function getBrandData(slug: string) {
       return null;
     }
     
-    const products = await Product.find({ brand: brand.name }).lean();
+    const brandData = brand as any;
+    const products = await Product.find({ brand: brandData.name }).lean();
     
     return {
       brand: {
-        ...brand,
-        _id: brand._id.toString(),
+        ...brandData,
+        _id: brandData._id.toString(),
       },
-      products: products.map(p => ({
+      products: products.map((p: any) => ({
         ...p,
         _id: p._id.toString(),
       })),

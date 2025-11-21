@@ -12,7 +12,7 @@ async function getBrands() {
     const brands = await Brand.find({ active: true }).lean();
     
     const brandsWithCount = await Promise.all(
-      brands.map(async (brand) => {
+      brands.map(async (brand: any) => {
         const productCount = await Product.countDocuments({ brand: brand.name });
         return {
           ...brand,
