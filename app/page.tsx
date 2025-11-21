@@ -143,14 +143,12 @@ export default async function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[
-              { name: 'T-Shirts', href: '/men', image: '/clothes/vyjby_512.webp' },
-              { name: 'Hoodies', href: '/men', image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg' },
-              { name: 'Casual Wear', href: '/men', image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg' },
-              { name: 'Formal', href: '/men', image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg' },
-              { name: 'Dresses', href: '/women', image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg' },
-              { name: 'Designer', href: '/brands', image: '/clothes/two-fashion-designers-atelier-with-dress-form.jpg' },
-              { name: 'Accessories', href: '/men', image: '/clothes/junko-nakase-Q-72wa9-7Dg-unsplash.jpg' },
-              { name: 'Sportswear', href: '/kids', image: '/clothes/vyjby_512.webp' },
+              { name: "Men's Jeans", href: '/men', image: '/clothes/vyjby_512.webp' },
+              { name: 'Slim Fit', href: '/men', image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg' },
+              { name: 'Regular Fit', href: '/men', image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg' },
+              { name: "Women's Jeans", href: '/women', image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg' },
+              { name: 'Skinny Jeans', href: '/women', image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg' },
+              { name: 'Designer Denim', href: '/brands', image: '/clothes/two-fashion-designers-atelier-with-dress-form.jpg' },
             ].map((cat, index) => (
               <Link
                 key={`${cat.name}-${index}`}

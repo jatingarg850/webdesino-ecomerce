@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Product from '@/models/Product';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   try {
+    console.log('Connecting to database...');
     await dbConnect();
+    console.log('Database connected');
     
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
@@ -20,12 +25,24 @@ export async function GET(request: NextRequest) {
       query.featured = true;
     }
     
-    const products = await Product.find(query).sort({ createdAt: -1 });
+    console.log('Fetching products with query:', query);
+    const products = await Product.find(query).sort({ createdAt: -1 }).lean();
+    console.log('Found products:', products.length);
     
-    return NextResponse.json({ products }, { status: 200 });
-  } catch (error) {
+    // Convert MongoDB documents to plain objects
+    const plainProducts = products.map((product: any) => ({
+      ...product,
+      _id: product._id.toString(),
+    }));
+    
+    return NextResponse.json({ products: plainProducts }, { status: 200 });
+  } catch (error: any) {
     console.error('Error fetching products:', error);
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to fetch products',
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }, { status: 500 });
   }
 }
 

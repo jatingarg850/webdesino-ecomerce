@@ -71,13 +71,10 @@ export function SiteHeader() {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/men" className="text-sm font-semibold hover:text-red-600 transition-colors">
-                MEN
+                MEN JEANS
               </Link>
               <Link href="/women" className="text-sm font-semibold hover:text-red-600 transition-colors">
-                WOMEN
-              </Link>
-              <Link href="/kids" className="text-sm font-semibold hover:text-red-600 transition-colors">
-                KIDS
+                WOMEN JEANS
               </Link>
               <Link href="/brands" className="text-sm font-semibold hover:text-red-600 transition-colors">
                 BRANDS
@@ -179,21 +176,14 @@ export function SiteHeader() {
                 className="block text-xl font-semibold hover:text-red-600 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                MEN
+                MEN JEANS
               </Link>
               <Link
                 href="/women"
                 className="block text-xl font-semibold hover:text-red-600 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                WOMEN
-              </Link>
-              <Link
-                href="/kids"
-                className="block text-xl font-semibold hover:text-red-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                KIDS
+                WOMEN JEANS
               </Link>
               <Link
                 href="/brands"
