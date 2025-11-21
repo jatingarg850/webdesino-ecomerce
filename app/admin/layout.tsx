@@ -11,7 +11,8 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
+  X,
+  Tag
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -57,6 +58,7 @@ export default function AdminLayout({
     { href: '/admin/products', icon: Package, label: 'Products' },
     { href: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
     { href: '/admin/users', icon: Users, label: 'Users' },
+    { href: '/admin/brands', icon: Tag, label: 'Brands' },
     { href: '/admin/settings', icon: Settings, label: 'Settings' },
   ];
 

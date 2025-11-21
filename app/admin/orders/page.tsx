@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Search, Eye, X } from 'lucide-react';
+import { Search, Eye, X, FileText, Printer } from 'lucide-react';
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -11,10 +11,29 @@ export default function AdminOrdersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('ALL');
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [storeSettings, setStoreSettings] = useState<any>(null);
 
   useEffect(() => {
     fetchOrders();
+    loadStoreSettings();
   }, []);
+
+  const loadStoreSettings = () => {
+    const settings = localStorage.getItem('storeSettings');
+    if (settings) {
+      setStoreSettings(JSON.parse(settings));
+    } else {
+      // Default settings
+      setStoreSettings({
+        storeName: 'Webdesino Store',
+        storeEmail: 'support@webdesino.com',
+        storePhone: '+91 1234567890',
+        storeAddress: '123 Fashion Street, Mumbai, India',
+        taxRate: '18',
+        shippingFee: '50',
+      });
+    }
+  };
 
   useEffect(() => {
     let filtered = orders;
@@ -101,6 +120,216 @@ export default function AdminOrdersPage() {
       case 'CANCELLED': return 'bg-red-100 text-red-700';
       default: return 'bg-gray-100 text-gray-700';
     }
+  };
+
+  const generateShippingLabel = (order: any) => {
+    const labelWindow = window.open('', '_blank');
+    if (!labelWindow) return;
+
+    const labelHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Shipping Label - ${order.orderNumber}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          .label { border: 3px solid black; padding: 20px; max-width: 600px; margin: 0 auto; }
+          .header { text-align: center; border-bottom: 2px solid black; padding-bottom: 15px; margin-bottom: 15px; }
+          .section { margin: 15px 0; }
+          .section-title { font-weight: bold; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; }
+          .barcode { text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 20px 0; }
+          .address-box { border: 2px solid black; padding: 15px; margin: 10px 0; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="label">
+          <div class="header">
+            <h1 style="margin: 0;">${storeSettings?.storeName || 'Webdesino Store'}</h1>
+            <div style="font-size: 12px; margin-top: 5px;">${storeSettings?.storeAddress || ''}</div>
+            <div style="font-size: 12px;">${storeSettings?.storePhone || ''}</div>
+          </div>
+
+          <div class="barcode">
+            ${order.orderNumber}
+          </div>
+
+          <div class="section">
+            <div class="section-title">Ship From:</div>
+            <div class="address-box">
+              <strong>${storeSettings?.storeName || 'Webdesino Store'}</strong><br>
+              ${storeSettings?.storeAddress || '123 Fashion Street, Mumbai, India'}<br>
+              Phone: ${storeSettings?.storePhone || '+91 1234567890'}
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Ship To:</div>
+            <div class="address-box">
+              <strong>${order.shippingAddress.name}</strong><br>
+              ${order.shippingAddress.address}<br>
+              ${order.shippingAddress.city}, ${order.shippingAddress.state}<br>
+              PIN: ${order.shippingAddress.pincode}<br>
+              Phone: ${order.shippingAddress.phone}
+            </div>
+          </div>
+
+          <div class="section">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="border: 1px solid black; padding: 8px;"><strong>Order Date:</strong></td>
+                <td style="border: 1px solid black; padding: 8px;">${new Date(order.createdAt).toLocaleDateString()}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid black; padding: 8px;"><strong>Items:</strong></td>
+                <td style="border: 1px solid black; padding: 8px;">${order.items.length} item(s)</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid black; padding: 8px;"><strong>Payment:</strong></td>
+                <td style="border: 1px solid black; padding: 8px;">${order.paymentMethod} - ${order.paymentStatus}</td>
+              </tr>
+            </table>
+          </div>
+
+          <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+            <strong>Handle with Care</strong>
+          </div>
+        </div>
+        <script>
+          window.onload = function() { window.print(); }
+        </script>
+      </body>
+      </html>
+    `;
+
+    labelWindow.document.write(labelHTML);
+    labelWindow.document.close();
+  };
+
+  const generateInvoice = (order: any) => {
+    const invoiceWindow = window.open('', '_blank');
+    if (!invoiceWindow) return;
+
+    const taxAmount = (order.subtotal * (parseFloat(storeSettings?.taxRate || '18') / 100)).toFixed(2);
+    
+    const invoiceHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Invoice - ${order.orderNumber}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+          .invoice-header { display: flex; justify-content: space-between; border-bottom: 3px solid black; padding-bottom: 20px; margin-bottom: 30px; }
+          .company-info { flex: 1; }
+          .invoice-info { text-align: right; }
+          .section { margin: 30px 0; }
+          .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; color: #333; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          th { background: #f0f0f0; padding: 12px; text-align: left; border: 1px solid #ddd; font-weight: bold; }
+          td { padding: 12px; border: 1px solid #ddd; }
+          .text-right { text-align: right; }
+          .total-row { font-weight: bold; background: #f9f9f9; }
+          .grand-total { font-size: 18px; background: #000; color: #fff; }
+          @media print { body { padding: 20px; } }
+        </style>
+      </head>
+      <body>
+        <div class="invoice-header">
+          <div class="company-info">
+            <h1 style="margin: 0; font-size: 28px;">${storeSettings?.storeName || 'Webdesino Store'}</h1>
+            <div style="margin-top: 10px; color: #666;">
+              ${storeSettings?.storeAddress || '123 Fashion Street, Mumbai, India'}<br>
+              Phone: ${storeSettings?.storePhone || '+91 1234567890'}<br>
+              Email: ${storeSettings?.storeEmail || 'support@webdesino.com'}
+            </div>
+          </div>
+          <div class="invoice-info">
+            <h2 style="margin: 0; font-size: 32px;">INVOICE</h2>
+            <div style="margin-top: 10px;">
+              <strong>Invoice #:</strong> ${order.orderNumber}<br>
+              <strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}<br>
+              <strong>Status:</strong> ${order.paymentStatus}
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Bill To:</div>
+          <div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
+            <strong>${order.shippingAddress.name}</strong><br>
+            ${order.shippingAddress.address}<br>
+            ${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}<br>
+            Phone: ${order.shippingAddress.phone}
+            ${order.shippingAddress.email ? `<br>Email: ${order.shippingAddress.email}` : ''}
+          </div>
+        </div>
+
+        <div class="section">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50%;">Item Description</th>
+                <th>Size</th>
+                <th>Color</th>
+                <th class="text-right">Qty</th>
+                <th class="text-right">Price</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${order.items.map((item: any) => `
+                <tr>
+                  <td>${item.name}</td>
+                  <td>${item.size}</td>
+                  <td>${item.color}</td>
+                  <td class="text-right">${item.quantity}</td>
+                  <td class="text-right">₹${item.price}</td>
+                  <td class="text-right">₹${(item.price * item.quantity).toFixed(2)}</td>
+                </tr>
+              `).join('')}
+              <tr class="total-row">
+                <td colspan="5" class="text-right">Subtotal:</td>
+                <td class="text-right">₹${order.subtotal}</td>
+              </tr>
+              <tr>
+                <td colspan="5" class="text-right">Tax (${storeSettings?.taxRate || '18'}%):</td>
+                <td class="text-right">₹${taxAmount}</td>
+              </tr>
+              <tr>
+                <td colspan="5" class="text-right">Shipping:</td>
+                <td class="text-right">${order.shipping === 0 ? 'FREE' : `₹${order.shipping}`}</td>
+              </tr>
+              <tr class="grand-total">
+                <td colspan="5" class="text-right">GRAND TOTAL:</td>
+                <td class="text-right">₹${order.total}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Payment Information:</div>
+          <div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
+            <strong>Payment Method:</strong> ${order.paymentMethod}<br>
+            <strong>Payment Status:</strong> ${order.paymentStatus}<br>
+            ${order.razorpayOrderId ? `<strong>Transaction ID:</strong> ${order.razorpayOrderId}<br>` : ''}
+          </div>
+        </div>
+
+        <div style="margin-top: 50px; padding-top: 20px; border-top: 2px solid #ddd; text-align: center; color: #666; font-size: 12px;">
+          <p>Thank you for your business!</p>
+          <p>For any queries, please contact us at ${storeSettings?.storeEmail || 'support@webdesino.com'}</p>
+        </div>
+
+        <script>
+          window.onload = function() { window.print(); }
+        </script>
+      </body>
+      </html>
+    `;
+
+    invoiceWindow.document.write(invoiceHTML);
+    invoiceWindow.document.close();
   };
 
   if (loading) {
@@ -220,11 +449,31 @@ export default function AdminOrdersPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/50" onClick={() => setSelectedOrder(null)}></div>
           <div className="relative bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
-              <h2 className="text-2xl font-black">Order Details</h2>
-              <button onClick={() => setSelectedOrder(null)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
-              </button>
+            <div className="sticky top-0 bg-white border-b p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-black">Order Details</h2>
+                <button onClick={() => setSelectedOrder(null)} className="p-2 hover:bg-gray-100 rounded-full">
+                  <X size={24} />
+                </button>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => generateInvoice(selectedOrder)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  <FileText size={18} />
+                  Generate Invoice
+                </button>
+                <button
+                  onClick={() => generateShippingLabel(selectedOrder)}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                >
+                  <Printer size={18} />
+                  Print Shipping Label
+                </button>
+              </div>
             </div>
 
             <div className="p-6 space-y-6">

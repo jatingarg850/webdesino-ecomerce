@@ -1,18 +1,59 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 
 export default function KidsPage() {
-  const products = [
-    { id: 1, name: 'Kids T-Shirt', price: 499, oldPrice: 699, image: '/clothes/vyjby_512.webp', badge: 'NEW' },
-    { id: 2, name: 'Cute Hoodie', price: 899, oldPrice: 1299, image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg', badge: 'SALE' },
-    { id: 3, name: 'Casual Shirt', price: 599, oldPrice: 899, image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg', badge: 'NEW' },
-    { id: 4, name: 'Party Dress', price: 1299, oldPrice: 1899, image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg', badge: 'TRENDING' },
-    { id: 5, name: 'Denim Jacket', price: 1199, oldPrice: 1699, image: '/clothes/junko-nakase-Q-72wa9-7Dg-unsplash.jpg', badge: 'SALE' },
-    { id: 6, name: 'Graphic Tee', price: 399, oldPrice: 599, image: '/clothes/vyjby_512.webp', badge: 'NEW' },
-    { id: 7, name: 'Winter Coat', price: 1799, oldPrice: 2499, image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg', badge: 'TRENDING' },
-    { id: 8, name: 'Summer Shorts', price: 499, oldPrice: 799, image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg', badge: 'SALE' },
-  ];
+  const [products, setProducts] = useState<any[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    filterProducts();
+  }, [selectedFilter, products]);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('/api/products');
+      const data = await res.json();
+      const kidsProducts = data.products.filter((p: any) => p.category === 'kids');
+      setProducts(kidsProducts);
+      setFilteredProducts(kidsProducts);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterProducts = () => {
+    if (selectedFilter === 'All') {
+      setFilteredProducts(products);
+      return;
+    }
+
+    const filtered = products.filter((product: any) => {
+      const subcategory = product.subcategory?.toLowerCase() || '';
+      const filter = selectedFilter.toLowerCase();
+      
+      if (filter === 't-shirts' && subcategory.includes('tshirt')) return true;
+      if (filter === 'dresses' && subcategory.includes('dress')) return true;
+      if (filter === 'jackets' && subcategory.includes('jacket')) return true;
+      if (filter === 'casual' && (subcategory.includes('casual') || subcategory.includes('tshirt'))) return true;
+      if (filter === 'party wear' && (subcategory.includes('dress') || subcategory.includes('formal'))) return true;
+      
+      return false;
+    });
+
+    setFilteredProducts(filtered);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -47,10 +88,15 @@ export default function KidsPage() {
       <section className="py-12 border-b">
         <div className="container">
           <div className="flex gap-4 overflow-x-auto pb-4">
-            {['All', 'Boys', 'Girls', 'T-Shirts', 'Dresses', 'Jackets', 'Casual', 'Party Wear'].map((cat) => (
+            {['All', 'T-Shirts', 'Dresses', 'Jackets', 'Casual', 'Party Wear'].map((cat) => (
               <button
                 key={cat}
-                className="px-6 py-2 rounded-full border-2 border-orange-500 text-orange-500 font-semibold whitespace-nowrap hover:bg-orange-500 hover:text-white transition"
+                onClick={() => setSelectedFilter(cat)}
+                className={`px-6 py-2 rounded-full border-2 font-semibold whitespace-nowrap transition ${
+                  selectedFilter === cat
+                    ? 'bg-orange-500 text-white border-orange-500'
+                    : 'border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white'
+                }`}
               >
                 {cat}
               </button>
@@ -65,7 +111,7 @@ export default function KidsPage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-black mb-2">ALL PRODUCTS</h2>
-              <p className="text-gray-600">{products.length} items</p>
+              <p className="text-gray-600">{filteredProducts.length} items</p>
             </div>
             <button className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-50">
               <SlidersHorizontal size={20} />
@@ -74,37 +120,54 @@ export default function KidsPage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="group"
-              >
-                <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    {product.badge}
+            {loading ? (
+              <div className="col-span-full text-center py-12">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-500 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading products...</p>
+              </div>
+            ) : filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <Link
+                  key={product._id}
+                  href={`/products/${product._id}`}
+                  className="group"
+                >
+                  <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
+                    <Image
+                      src={product.images[0] || '/placeholder.jpg'}
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {product.badge && (
+                      <div className="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        {product.badge}
+                      </div>
+                    )}
+                    {product.discount > 0 && (
+                      <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        -{product.discount}%
+                      </div>
+                    )}
                   </div>
-                  <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
+                  <div>
+                    <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-orange-500 transition-colors">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold">₹{product.price}</span>
+                      {product.originalPrice > product.price && (
+                        <span className="text-sm text-gray-500 line-through">₹{product.originalPrice}</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-orange-500 transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">₹{product.price}</span>
-                    <span className="text-sm text-gray-500 line-through">₹{product.oldPrice}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">No products found in kids category</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

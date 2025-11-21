@@ -1,15 +1,36 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import connectDB from '@/lib/mongodb';
+import Brand from '@/models/Brand';
+import Product from '@/models/Product';
 
-export default function BrandsPage() {
-  const brands = [
-    { name: 'Premium Collection', image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg', products: 150 },
-    { name: 'Designer Studio', image: '/clothes/two-fashion-designers-atelier-with-dress-form.jpg', products: 89 },
-    { name: 'Casual Wear', image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg', products: 234 },
-    { name: 'Elegant Fashion', image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg', products: 178 },
-    { name: 'Street Style', image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg', products: 156 },
-    { name: 'Classic Trends', image: '/clothes/junko-nakase-Q-72wa9-7Dg-unsplash.jpg', products: 203 },
-  ];
+export const dynamic = 'force-dynamic';
+
+async function getBrands() {
+  try {
+    await connectDB();
+    const brands = await Brand.find({ active: true }).lean();
+    
+    const brandsWithCount = await Promise.all(
+      brands.map(async (brand) => {
+        const productCount = await Product.countDocuments({ brand: brand.name });
+        return {
+          ...brand,
+          _id: brand._id.toString(),
+          products: productCount,
+        };
+      })
+    );
+    
+    return brandsWithCount;
+  } catch (error) {
+    console.error('Error fetching brands:', error);
+    return [];
+  }
+}
+
+export default async function BrandsPage() {
+  const brands = await getBrands();
 
   return (
     <div className="min-h-screen bg-white">
@@ -42,28 +63,34 @@ export default function BrandsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {brands.map((brand, index) => (
-              <Link
-                key={index}
-                href={`/brands/${brand.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className="group relative h-96 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
-              >
-                <Image
-                  src={brand.image}
-                  alt={brand.name}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-end text-white p-8">
-                  <h3 className="text-2xl font-black mb-2">{brand.name}</h3>
-                  <p className="text-sm opacity-90">{brand.products} Products</p>
-                  <button className="mt-4 bg-white text-black px-6 py-2 rounded-full font-semibold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                    Explore
-                  </button>
-                </div>
-              </Link>
-            ))}
+            {brands.length > 0 ? (
+              brands.map((brand) => (
+                <Link
+                  key={brand._id}
+                  href={`/brands/${brand.slug}`}
+                  className="group relative h-96 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                >
+                  <Image
+                    src={brand.logo}
+                    alt={brand.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-end text-white p-8">
+                    <h3 className="text-2xl font-black mb-2">{brand.name}</h3>
+                    <p className="text-sm opacity-90">{brand.products} Products</p>
+                    <button className="mt-4 bg-white text-black px-6 py-2 rounded-full font-semibold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                      Explore
+                    </button>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">No brands available yet</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -1,22 +1,61 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronRight, SlidersHorizontal } from 'lucide-react';
-import dbConnect from '@/lib/mongodb';
-import Product from '@/models/Product';
+import { SlidersHorizontal } from 'lucide-react';
 
-async function getProducts() {
-  try {
-    await dbConnect();
-    const products = await Product.find({ category: 'men' }).lean();
-    return JSON.parse(JSON.stringify(products));
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
-  }
-}
+export default function MenPage() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [loading, setLoading] = useState(true);
 
-export default async function MenPage() {
-  const products = await getProducts();
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    filterProducts();
+  }, [selectedFilter, products]);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('/api/products');
+      const data = await res.json();
+      const menProducts = data.products.filter((p: any) => p.category === 'men');
+      setProducts(menProducts);
+      setFilteredProducts(menProducts);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterProducts = () => {
+    if (selectedFilter === 'All') {
+      setFilteredProducts(products);
+      return;
+    }
+
+    const filtered = products.filter((product: any) => {
+      const subcategory = product.subcategory?.toLowerCase() || '';
+      const filter = selectedFilter.toLowerCase();
+      
+      if (filter === 't-shirts' && subcategory.includes('tshirt')) return true;
+      if (filter === 'shirts' && subcategory.includes('shirt') && !subcategory.includes('tshirt')) return true;
+      if (filter === 'hoodies' && subcategory.includes('hoodie')) return true;
+      if (filter === 'jackets' && subcategory.includes('jacket')) return true;
+      if (filter === 'jeans' && subcategory.includes('jean')) return true;
+      if (filter === 'formal' && subcategory.includes('formal')) return true;
+      if (filter === 'casual' && (subcategory.includes('casual') || subcategory.includes('tshirt'))) return true;
+      
+      return false;
+    });
+
+    setFilteredProducts(filtered);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -54,7 +93,12 @@ export default async function MenPage() {
             {['All', 'T-Shirts', 'Shirts', 'Hoodies', 'Jackets', 'Jeans', 'Formal', 'Casual'].map((cat) => (
               <button
                 key={cat}
-                className="px-6 py-2 rounded-full border-2 border-black font-semibold whitespace-nowrap hover:bg-black hover:text-white transition"
+                onClick={() => setSelectedFilter(cat)}
+                className={`px-6 py-2 rounded-full border-2 font-semibold whitespace-nowrap transition ${
+                  selectedFilter === cat
+                    ? 'bg-black text-white border-black'
+                    : 'border-black text-black hover:bg-black hover:text-white'
+                }`}
               >
                 {cat}
               </button>
@@ -69,7 +113,7 @@ export default async function MenPage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-black mb-2">ALL PRODUCTS</h2>
-              <p className="text-gray-600">{products.length} items</p>
+              <p className="text-gray-600">{filteredProducts.length} items</p>
             </div>
             <button className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-50">
               <SlidersHorizontal size={20} />
@@ -77,9 +121,14 @@ export default async function MenPage() {
             </button>
           </div>
 
-          {products.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-black mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading products...</p>
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {products.map((product: any) => (
+              {filteredProducts.map((product: any) => (
                 <Link
                   key={product._id}
                   href={`/products/${product._id}`}

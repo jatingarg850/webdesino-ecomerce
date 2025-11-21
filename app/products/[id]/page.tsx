@@ -16,6 +16,7 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const { addItem } = useCartStore();
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
@@ -112,9 +113,10 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
           <div className="space-y-4">
+            {/* Main Image */}
             <div className="aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden relative">
               <Image
-                src={product.images[0] || '/clothes/vyjby_512.webp'}
+                src={product.images[selectedImageIndex] || '/clothes/vyjby_512.webp'}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -124,12 +126,43 @@ export default function ProductDetailPage() {
                   {product.badge}
                 </div>
               )}
-              {product.discount && (
+              {product.oldPrice && product.oldPrice > product.price && (
                 <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">
-                  -{product.discount}% OFF
+                  -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}% OFF
+                </div>
+              )}
+              
+              {/* Image Counter */}
+              {product.images && product.images.length > 1 && (
+                <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  {selectedImageIndex + 1} / {product.images.length}
                 </div>
               )}
             </div>
+
+            {/* Thumbnail Gallery */}
+            {product.images && product.images.length > 1 && (
+              <div className="grid grid-cols-4 gap-3">
+                {product.images.map((image: string, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`aspect-square bg-gray-100 rounded-lg overflow-hidden relative border-2 transition ${
+                      selectedImageIndex === index
+                        ? 'border-black'
+                        : 'border-transparent hover:border-gray-300'
+                    }`}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${product.name} - Image ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Info */}

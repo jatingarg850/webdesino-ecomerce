@@ -1,18 +1,38 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Zap } from 'lucide-react';
+import connectDB from '@/lib/mongodb';
+import Product from '@/models/Product';
 
-export default function SalePage() {
-  const saleProducts = [
-    { id: 1, name: 'Premium Cotton T-Shirt', price: 499, oldPrice: 999, discount: 50, image: '/clothes/vyjby_512.webp' },
-    { id: 2, name: 'Designer Hoodie', price: 999, oldPrice: 1999, discount: 50, image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg' },
-    { id: 3, name: 'Casual Shirt', price: 699, oldPrice: 1399, discount: 50, image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg' },
-    { id: 4, name: 'Formal Blazer', price: 1999, oldPrice: 3999, discount: 50, image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg' },
-    { id: 5, name: 'Elegant Dress', price: 1499, oldPrice: 2999, discount: 50, image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg' },
-    { id: 6, name: 'Stylish Jacket', price: 1299, oldPrice: 2599, discount: 50, image: '/clothes/junko-nakase-Q-72wa9-7Dg-unsplash.jpg' },
-    { id: 7, name: 'Graphic Tee', price: 399, oldPrice: 799, discount: 50, image: '/clothes/vyjby_512.webp' },
-    { id: 8, name: 'Winter Coat', price: 2499, oldPrice: 4999, discount: 50, image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg' },
-  ];
+export const dynamic = 'force-dynamic';
+
+async function getSaleProducts() {
+  try {
+    await connectDB();
+    const products = await Product.find({
+      $or: [
+        { badge: 'SALE' },
+        { discount: { $gt: 0 } },
+        { $expr: { $lt: ['$price', '$oldPrice'] } }
+      ]
+    }).lean();
+    
+    return products.map(product => ({
+      ...product,
+      _id: product._id.toString(),
+    }));
+  } catch (error) {
+    console.error('Error fetching sale products:', error);
+    return [];
+  }
+}
+
+export default async function SalePage() {
+  const saleProducts = await getSaleProducts();
+  
+  const maxDiscount = saleProducts.length > 0 
+    ? Math.max(...saleProducts.map(p => p.discount || 0))
+    : 0;
 
   return (
     <div className="min-h-screen bg-white">
@@ -50,11 +70,11 @@ export default function SalePage() {
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-black mb-2">50%</div>
+              <div className="text-4xl font-black mb-2">{maxDiscount}%</div>
               <div className="text-sm opacity-80">Maximum Discount</div>
             </div>
             <div>
-              <div className="text-4xl font-black mb-2">500+</div>
+              <div className="text-4xl font-black mb-2">{saleProducts.length}+</div>
               <div className="text-sm opacity-80">Products on Sale</div>
             </div>
             <div>
@@ -78,43 +98,64 @@ export default function SalePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {saleProducts.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="group"
-              >
-                <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
-                    SALE
-                  </div>
-                  <div className="absolute top-3 right-3 bg-black text-white px-3 py-1 rounded-full text-xs font-bold">
-                    -{product.discount}%
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3 bg-yellow-400 text-black text-center py-2 rounded-full text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    LIMITED STOCK
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-red-600 transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-red-600">₹{product.price}</span>
-                    <span className="text-sm text-gray-500 line-through">₹{product.oldPrice}</span>
-                  </div>
-                  <div className="text-xs text-green-600 font-semibold mt-1">
-                    Save ₹{product.oldPrice - product.price}
-                  </div>
-                </div>
-              </Link>
-            ))}
+            {saleProducts.length > 0 ? (
+              saleProducts.map((product) => {
+                const savings = (product.oldPrice || product.price) - product.price;
+                const discountPercent = product.discount || 
+                  (product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0);
+                
+                return (
+                  <Link
+                    key={product._id}
+                    href={`/products/${product._id}`}
+                    className="group"
+                  >
+                    <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
+                      <Image
+                        src={product.images[0] || '/placeholder.jpg'}
+                        alt={product.name}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                        SALE
+                      </div>
+                      {discountPercent > 0 && (
+                        <div className="absolute top-3 right-3 bg-black text-white px-3 py-1 rounded-full text-xs font-bold">
+                          -{discountPercent}%
+                        </div>
+                      )}
+                      <div className="absolute bottom-3 left-3 right-3 bg-yellow-400 text-black text-center py-2 rounded-full text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                        LIMITED STOCK
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-sm mb-1 line-clamp-2 group-hover:text-red-600 transition-colors">
+                        {product.name}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-red-600">₹{product.price}</span>
+                        {product.oldPrice && product.oldPrice > product.price && (
+                          <span className="text-sm text-gray-500 line-through">₹{product.oldPrice}</span>
+                        )}
+                      </div>
+                      {savings > 0 && (
+                        <div className="text-xs text-green-600 font-semibold mt-1">
+                          Save ₹{savings}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">No sale items available at the moment</p>
+                <Link href="/men" className="text-red-600 hover:underline mt-4 inline-block">
+                  Browse all products
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
