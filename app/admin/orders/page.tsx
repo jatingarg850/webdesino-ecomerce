@@ -25,8 +25,8 @@ export default function AdminOrdersPage() {
     } else {
       // Default settings
       setStoreSettings({
-        storeName: 'Webdesino Store',
-        storeEmail: 'support@webdesino.com',
+        storeName: 'POCKET MOUSE Store',
+        storeEmail: 'support@POCKET MOUSE.com',
         storePhone: '+91 1234567890',
         storeAddress: '123 Fashion Street, Mumbai, India',
         taxRate: '18',
@@ -145,7 +145,7 @@ export default function AdminOrdersPage() {
       <body>
         <div class="label">
           <div class="header">
-            <h1 style="margin: 0;">${storeSettings?.storeName || 'Webdesino Store'}</h1>
+            <h1 style="margin: 0;">${storeSettings?.storeName || 'POCKET MOUSE Store'}</h1>
             <div style="font-size: 12px; margin-top: 5px;">${storeSettings?.storeAddress || ''}</div>
             <div style="font-size: 12px;">${storeSettings?.storePhone || ''}</div>
           </div>
@@ -157,7 +157,7 @@ export default function AdminOrdersPage() {
           <div class="section">
             <div class="section-title">Ship From:</div>
             <div class="address-box">
-              <strong>${storeSettings?.storeName || 'Webdesino Store'}</strong><br>
+              <strong>${storeSettings?.storeName || 'POCKET MOUSE Store'}</strong><br>
               ${storeSettings?.storeAddress || '123 Fashion Street, Mumbai, India'}<br>
               Phone: ${storeSettings?.storePhone || '+91 1234567890'}
             </div>
@@ -236,11 +236,11 @@ export default function AdminOrdersPage() {
       <body>
         <div class="invoice-header">
           <div class="company-info">
-            <h1 style="margin: 0; font-size: 28px;">${storeSettings?.storeName || 'Webdesino Store'}</h1>
+            <h1 style="margin: 0; font-size: 28px;">${storeSettings?.storeName || 'POCKET MOUSE Store'}</h1>
             <div style="margin-top: 10px; color: #666;">
               ${storeSettings?.storeAddress || '123 Fashion Street, Mumbai, India'}<br>
               Phone: ${storeSettings?.storePhone || '+91 1234567890'}<br>
-              Email: ${storeSettings?.storeEmail || 'support@webdesino.com'}
+              Email: ${storeSettings?.storeEmail || 'support@POCKET MOUSE.com'}
             </div>
           </div>
           <div class="invoice-info">
@@ -318,7 +318,7 @@ export default function AdminOrdersPage() {
 
         <div style="margin-top: 50px; padding-top: 20px; border-top: 2px solid #ddd; text-align: center; color: #666; font-size: 12px;">
           <p>Thank you for your business!</p>
-          <p>For any queries, please contact us at ${storeSettings?.storeEmail || 'support@webdesino.com'}</p>
+          <p>For any queries, please contact us at ${storeSettings?.storeEmail || 'support@POCKET MOUSE.com'}</p>
         </div>
 
         <script>

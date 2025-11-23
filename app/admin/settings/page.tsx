@@ -5,11 +5,11 @@ import { Save, Store, Mail, Phone, MapPin, Globe } from 'lucide-react';
 
 function AdminSettingsContent() {
   const [settings, setSettings] = useState({
-    storeName: 'Webdesino Store',
-    storeEmail: 'support@webdesino.com',
+    storeName: 'POCKET MOUSE Store',
+    storeEmail: 'support@POCKET MOUSE.com',
     storePhone: '+91 1234567890',
     storeAddress: '123 Fashion Street, Mumbai, India',
-    storeWebsite: 'https://webdesino.com',
+    storeWebsite: 'https://POCKET MOUSE.com',
     currency: 'INR',
     taxRate: '18',
     shippingFee: '50',

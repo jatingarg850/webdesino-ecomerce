@@ -217,7 +217,7 @@ export default function AdminProductsPage() {
           <div key={product._id} className="bg-white rounded-lg border overflow-hidden hover:shadow-lg transition">
             <div className="aspect-[3/4] relative">
               <Image
-                src={product.images[0] || '/clothes/vyjby_512.webp'}
+                src={product.images[0] || 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763743836/POCKET MOUSE-products/nwnfgeaujg3tj3ohraw2.png'}
                 alt={product.name}
                 fill
                 className="object-cover"

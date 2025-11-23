@@ -37,7 +37,7 @@ export default async function BrandsPage() {
       {/* Hero Banner */}
       <section className="relative h-[400px] bg-gradient-to-r from-purple-600 to-indigo-700 overflow-hidden">
         <Image
-          src="/clothes/two-fashion-designers-atelier-with-dress-form.jpg"
+          src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908729/POCKET MOUSE-products/lhl2bqyoxzca33mt0x63.jpg"
           alt="Brands"
           fill
           className="object-cover opacity-20"

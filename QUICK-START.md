@@ -16,12 +16,12 @@
 
 Edit `.env.local` and add:
 ```env
-MONGODB_URI=mongodb+srv://your-username:your-password@cluster.mongodb.net/webdesino?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://your-username:your-password@cluster.mongodb.net/POCKET MOUSE?retryWrites=true&w=majority
 ```
 
 Or use local MongoDB:
 ```env
-MONGODB_URI=mongodb://localhost:27017/webdesino
+MONGODB_URI=mongodb://localhost:27017/POCKET MOUSE
 ```
 
 ### 2. Install Dependencies (if not done)

@@ -1,4 +1,4 @@
-# Webdesino E-commerce - Full Implementation Guide
+# POCKET MOUSE E-commerce - Full Implementation Guide
 
 ## ✅ Completed Features
 

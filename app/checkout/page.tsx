@@ -142,8 +142,8 @@ export default function CheckoutPage() {
           key: config.razorpay.keyId,
           amount: order.amount,
           currency: order.currency,
-          name: 'Webdesino',
-          description: 'Purchase from Webdesino Store',
+          name: 'POCKET MOUSE',
+          description: 'Purchase from POCKET MOUSE Store',
           order_id: order.id,
           handler: async function (response: any) {
             try {

@@ -48,7 +48,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <aside className="w-64 bg-white border-r min-h-screen fixed">
         <div className="p-6 border-b">
           <h1 className="text-2xl font-black">Admin Panel</h1>
-          <p className="text-sm text-gray-600">Webdesino Store</p>
+          <p className="text-sm text-gray-600">POCKET MOUSE Store</p>
         </div>
 
         <nav className="p-4">

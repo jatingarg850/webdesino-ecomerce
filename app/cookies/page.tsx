@@ -16,7 +16,7 @@ export default function CookiesPage() {
           <div className="prose prose-lg max-w-none">
             <div className="mb-12">
               <p className="text-lg text-gray-600 leading-relaxed">
-                This Cookie Policy explains how Webdesino uses cookies and similar technologies to recognize 
+                This Cookie Policy explains how POCKET MOUSE uses cookies and similar technologies to recognize 
                 you when you visit our website. It explains what these technologies are and why we use them, 
                 as well as your rights to control our use of them.
               </p>
@@ -149,7 +149,7 @@ export default function CookiesPage() {
                 If you have questions about our use of cookies, please contact us:
               </p>
               <div className="space-y-2">
-                <p>Email: privacy@webdesino.com</p>
+                <p>Email: privacy@POCKET MOUSE.com</p>
                 <p>Phone: +91 1800-123-4567</p>
               </div>
             </div>

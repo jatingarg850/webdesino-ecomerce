@@ -133,7 +133,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
 
         {/* Header */}
         <div className="p-6 border-b">
-          <h2 className="text-2xl font-black text-center">Welcome to Webdesino</h2>
+          <h2 className="text-2xl font-black text-center">Welcome to POCKET MOUSE</h2>
         </div>
 
         {/* Tabs */}

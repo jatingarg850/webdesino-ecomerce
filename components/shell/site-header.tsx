@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ShoppingBag, Search, User, Heart, Menu, X, MapPin, Gift } from "lucide-react";
+import { ShoppingBag, Search, User, Heart, Menu, X, MapPin, Gift, ChevronDown } from "lucide-react";
 
 import { useCartStore } from "@/lib/store";
 
@@ -14,6 +14,8 @@ export function SiteHeader() {
   const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState<any>(null);
   const [mounted, setMounted] = useState(false);
+  const [menDropdownOpen, setMenDropdownOpen] = useState(false);
+  const [womenDropdownOpen, setWomenDropdownOpen] = useState(false);
   const cartCount = useCartStore((state) => state.getItemCount());
 
   // Prevent hydration mismatch
@@ -64,20 +66,77 @@ export function SiteHeader() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
               <div className="text-2xl md:text-3xl font-black tracking-tight">
-                WEBDESINO
+                POCKET MOUSE
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/men" className="text-sm font-semibold hover:text-red-600 transition-colors">
-                MEN JEANS
-              </Link>
-              <Link href="/women" className="text-sm font-semibold hover:text-red-600 transition-colors">
-                WOMEN JEANS
-              </Link>
-              <Link href="/brands" className="text-sm font-semibold hover:text-red-600 transition-colors">
-                BRANDS
+              {/* Men's Dropdown */}
+              <div 
+                className="relative group"
+                onMouseEnter={() => setMenDropdownOpen(true)}
+                onMouseLeave={() => setMenDropdownOpen(false)}
+              >
+                <button className="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1 py-2">
+                  MEN JEANS
+                  <ChevronDown size={16} className={`transition-transform ${menDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {menDropdownOpen && (
+                  <div className="absolute top-full left-0 pt-2 z-50">
+                    <div className="bg-white border shadow-lg rounded-lg py-2 min-w-[200px]">
+                      <Link href="/men" className="block px-4 py-2 text-sm hover:bg-gray-100 font-semibold">
+                        All Jeans
+                      </Link>
+                      <Link href="/men?fit=straight" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                        Straight Fit
+                      </Link>
+                      <Link href="/men?fit=loose" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                        Loose Fit
+                      </Link>
+                      <Link href="/men?fit=baggy" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                        Baggy Fit
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Women's Dropdown */}
+              <div 
+                className="relative group"
+                onMouseEnter={() => setWomenDropdownOpen(true)}
+                onMouseLeave={() => setWomenDropdownOpen(false)}
+              >
+                <button className="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1 py-2">
+                  WOMEN JEANS
+                  <ChevronDown size={16} className={`transition-transform ${womenDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {womenDropdownOpen && (
+                  <div className="absolute top-full left-0 pt-2 z-50">
+                    <div className="bg-white border shadow-lg rounded-lg py-2 min-w-[200px]">
+                      <Link href="/women" className="block px-4 py-2 text-sm hover:bg-gray-100 font-semibold">
+                        All Jeans
+                      </Link>
+                      <Link href="/women?fit=flair" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                        Flair Jeans
+                      </Link>
+                      <Link href="/women?fit=straight" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                        Straight Jeans
+                      </Link>
+                      <Link href="/women?fit=bell-bottom" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                        Bell Bottom
+                      </Link>
+                      <Link href="/women?fit=baggy" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                        Baggy
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <Link href="/about" className="text-sm font-semibold hover:text-red-600 transition-colors">
+                ABOUT
               </Link>
               <Link href="/sale" className="text-sm font-semibold text-red-600 hover:text-red-700 transition-colors">
                 SALE
@@ -186,11 +245,11 @@ export function SiteHeader() {
                 WOMEN JEANS
               </Link>
               <Link
-                href="/brands"
+                href="/about"
                 className="block text-xl font-semibold hover:text-red-600 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                BRANDS
+                ABOUT
               </Link>
               <Link
                 href="/sale"

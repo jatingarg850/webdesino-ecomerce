@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
-          folder: 'webdesino-products',
+          folder: 'POCKET MOUSE-products',
           resource_type: 'auto',
         },
         (error, result) => {

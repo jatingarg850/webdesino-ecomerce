@@ -89,7 +89,7 @@ export default function WishlistPage() {
               <Link href={`/products/${product._id}`}>
                 <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
                   <Image
-                    src={product.images[0] || '/clothes/vyjby_512.webp'}
+                    src={product.images[0] || 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763743836/POCKET MOUSE-products/nwnfgeaujg3tj3ohraw2.png'}
                     alt={product.name}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"

@@ -77,7 +77,7 @@ export default function AdminLogin() {
             {isLogin ? 'Sign in to access the dashboard' : 'Create your admin account'}
           </p>
           <p className="text-xs text-gray-500 mt-2">
-            Default: admin@webdesino.com / admin123
+            Default: admin@POCKET MOUSE.com / admin123
           </p>
         </div>
 

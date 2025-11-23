@@ -22,7 +22,7 @@ sudo systemctl start mongodb
 
 Edit `.env.local` with your settings:
 ```env
-MONGODB_URI=mongodb://localhost:27017/webdesino-shoes
+MONGODB_URI=mongodb://localhost:27017/POCKET MOUSE-shoes
 NEXTAUTH_SECRET=your-random-secret-key-here
 ```
 

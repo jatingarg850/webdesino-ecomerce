@@ -208,7 +208,7 @@ export default function ShippingPage() {
               Our customer support team is here to assist you
             </p>
             <div className="space-y-2">
-              <p>Email: shipping@webdesino.com</p>
+              <p>Email: shipping@POCKET MOUSE.com</p>
               <p>Phone: +91 1800-123-4567</p>
             </div>
           </div>

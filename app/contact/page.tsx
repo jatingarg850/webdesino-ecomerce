@@ -51,7 +51,7 @@ export default function ContactPage() {
                 <Mail className="w-8 h-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-bold mb-2">Email Us</h3>
-              <p className="text-gray-600 mb-2">support@webdesino.com</p>
+              <p className="text-gray-600 mb-2">support@POCKET MOUSE.com</p>
               <p className="text-sm text-gray-500">We'll respond within 24 hours</p>
             </div>
 

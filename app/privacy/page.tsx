@@ -18,7 +18,7 @@ export default function PrivacyPage() {
           <div className="prose prose-lg max-w-none">
             <div className="mb-12">
               <p className="text-lg text-gray-600 leading-relaxed">
-                At Webdesino, we take your privacy seriously. This Privacy Policy explains how we collect, 
+                At POCKET MOUSE, we take your privacy seriously. This Privacy Policy explains how we collect, 
                 use, disclose, and safeguard your information when you visit our website or make a purchase.
               </p>
             </div>
@@ -147,7 +147,7 @@ export default function PrivacyPage() {
                   <li>• Data portability</li>
                 </ul>
                 <p className="text-gray-600 mt-4">
-                  To exercise these rights, please contact us at privacy@webdesino.com
+                  To exercise these rights, please contact us at privacy@POCKET MOUSE.com
                 </p>
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function PrivacyPage() {
                 If you have any questions about this Privacy Policy, please contact us:
               </p>
               <div className="space-y-2">
-                <p>Email: privacy@webdesino.com</p>
+                <p>Email: privacy@POCKET MOUSE.com</p>
                 <p>Phone: +91 1800-123-4567</p>
               </div>
             </div>

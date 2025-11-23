@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import Product from '../models/Product';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/webdesino';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/POCKET MOUSE';
 
 const products = [
   // Men's Products

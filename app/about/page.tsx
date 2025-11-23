@@ -1,132 +1,325 @@
 import Image from 'next/image';
-import { Users, Target, Award, Heart } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative h-[500px] bg-gradient-to-r from-gray-900 to-gray-700">
-        <div className="absolute inset-0 bg-black/30"></div>
+      <section className="relative h-[600px] overflow-hidden">
+        <Image
+          src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908729/webdesino-products/lhl2bqyoxzca33mt0x63.jpg"
+          alt="POCKET MOUSE Denim"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
         <div className="absolute inset-0 flex items-center">
-          <div className="container text-center text-white">
-            <h1 className="text-5xl md:text-6xl font-black mb-4">About Webdesino</h1>
-            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
-              Your destination for premium fashion and lifestyle products
-            </p>
+          <div className="container">
+            <div className="max-w-3xl">
+              <div className="inline-block mb-4">
+                <span className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider border border-white/30">
+                  Est. 2024
+                </span>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-black mb-6 text-white leading-tight">
+                CRAFTING DENIM
+                <br />
+                <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                  PERFECTION
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed">
+                Where premium quality meets timeless style. We're not just selling jeans—we're creating confidence.
+              </p>
+              <div className="flex gap-4">
+                <Link
+                  href="/men"
+                  className="bg-white text-black px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                >
+                  Explore Collection
+                  <ArrowRight size={20} />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Our Story */}
-      <section className="py-20">
+      <section className="py-20 md:py-32">
         <div className="container">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-black mb-6 text-center">Our Story</h2>
-            <div className="prose prose-lg max-w-none text-gray-600">
-              <p className="text-lg leading-relaxed mb-4">
-                Founded in 2024, Webdesino has quickly become a leading destination for fashion-forward individuals 
-                seeking quality, style, and affordability. Our journey began with a simple mission: to make premium 
-                fashion accessible to everyone.
-              </p>
-              <p className="text-lg leading-relaxed mb-4">
-                We believe that great style shouldn't come with a hefty price tag. That's why we work directly with 
-                manufacturers and designers to bring you the latest trends at prices that won't break the bank.
-              </p>
-              <p className="text-lg leading-relaxed">
-                Today, we serve thousands of happy customers across India, offering a curated selection of clothing 
-                for men, women, and kids. Our commitment to quality, customer service, and sustainable practices 
-                sets us apart in the industry.
-              </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908726/webdesino-products/kmfzxc1k7btmb3ddhjdv.jpg"
+                alt="Our Story"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div>
+              <div className="inline-block mb-4">
+                <span className="bg-blue-100 text-blue-600 px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider">
+                  Our Story
+                </span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black mb-6">
+                Born from a Passion for
+                <span className="text-blue-600"> Perfect Fit</span>
+              </h2>
+              <div className="space-y-4 text-gray-600 text-lg leading-relaxed">
+                <p>
+                  In 2024, we set out on a mission to revolutionize the denim industry. Frustrated by the lack of quality, 
+                  affordable jeans that actually fit well, we decided to create something different.
+                </p>
+                <p>
+                  <strong className="text-black">POCKET MOUSE</strong> was born from countless hours of research, fabric testing, 
+                  and fit sessions. We partnered with master craftsmen who share our obsession with detail and quality.
+                </p>
+                <p>
+                  Today, we're proud to offer premium denim that doesn't compromise on comfort, style, or your budget. 
+                  Every pair tells a story of dedication, craftsmanship, and the belief that everyone deserves jeans 
+                  that make them feel incredible.
+                </p>
+              </div>
+              <div className="mt-8 flex gap-6">
+                <div>
+                  <div className="text-3xl font-black text-blue-600">50K+</div>
+                  <div className="text-sm text-gray-600">Happy Customers</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-black text-blue-600">100+</div>
+                  <div className="text-sm text-gray-600">Denim Styles</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-black text-blue-600">4.8★</div>
+                  <div className="text-sm text-gray-600">Average Rating</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Values */}
+      {/* Our Process */}
+      <section className="py-20 md:py-32">
+        <div className="container">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black mb-4">
+              From Fabric to Fashion
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Every pair of POCKET MOUSE jeans goes through our meticulous 5-step process
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-black">
+                1
+              </div>
+              <h3 className="font-bold text-lg mb-2">Fabric Selection</h3>
+              <p className="text-sm text-gray-600">Premium denim sourced from trusted mills</p>
+            </div>
+            <div className="text-center">
+              <div className="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-black">
+                2
+              </div>
+              <h3 className="font-bold text-lg mb-2">Design & Cut</h3>
+              <p className="text-sm text-gray-600">Precision cutting for perfect fit</p>
+            </div>
+            <div className="text-center">
+              <div className="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-black">
+                3
+              </div>
+              <h3 className="font-bold text-lg mb-2">Expert Stitching</h3>
+              <p className="text-sm text-gray-600">Master craftsmen ensure durability</p>
+            </div>
+            <div className="text-center">
+              <div className="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-black">
+                4
+              </div>
+              <h3 className="font-bold text-lg mb-2">Quality Check</h3>
+              <p className="text-sm text-gray-600">Rigorous testing for perfection</p>
+            </div>
+            <div className="text-center">
+              <div className="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-black">
+                5
+              </div>
+              <h3 className="font-bold text-lg mb-2">To Your Door</h3>
+              <p className="text-sm text-gray-600">Fast, secure delivery to you</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Image Gallery */}
       <section className="py-20 bg-gray-50">
         <div className="container">
-          <h2 className="text-4xl font-black mb-12 text-center">Our Values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target className="w-10 h-10 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Quality First</h3>
-              <p className="text-gray-600">
-                We never compromise on quality. Every product is carefully selected and tested.
-              </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="relative h-64 rounded-xl overflow-hidden">
+              <Image
+                src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908725/webdesino-products/gmd0go065j8vsxzzzuf1.jpg"
+                alt="Denim Collection"
+                fill
+                className="object-cover hover:scale-110 transition-transform duration-500"
+              />
             </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-10 h-10 text-green-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Customer Focused</h3>
-              <p className="text-gray-600">
-                Your satisfaction is our priority. We're here to help every step of the way.
-              </p>
+            <div className="relative h-64 rounded-xl overflow-hidden">
+              <Image
+                src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908721/webdesino-products/vnkbc2lpyedhv8alkzwp.jpg"
+                alt="Denim Collection"
+                fill
+                className="object-cover hover:scale-110 transition-transform duration-500"
+              />
             </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="w-10 h-10 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Innovation</h3>
-              <p className="text-gray-600">
-                We constantly evolve to bring you the latest trends and technologies.
-              </p>
+            <div className="relative h-64 rounded-xl overflow-hidden">
+              <Image
+                src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908722/webdesino-products/bfox9wx3jua0ie8zu0df.jpg"
+                alt="Denim Collection"
+                fill
+                className="object-cover hover:scale-110 transition-transform duration-500"
+              />
             </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-10 h-10 text-red-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Sustainability</h3>
-              <p className="text-gray-600">
-                We're committed to ethical practices and environmental responsibility.
-              </p>
+            <div className="relative h-64 rounded-xl overflow-hidden">
+              <Image
+                src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763743836/webdesino-products/nwnfgeaujg3tj3ohraw2.png"
+                alt="Denim Collection"
+                fill
+                className="object-cover hover:scale-110 transition-transform duration-500"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-20">
+      {/* Testimonials */}
+      <section className="py-20 md:py-32">
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-5xl font-black mb-2">10K+</div>
-              <div className="text-gray-600">Happy Customers</div>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black mb-4">
+              What Our Customers Say
+            </h2>
+            <p className="text-xl text-gray-600">
+              Real reviews from real people
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">★</span>
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                "Best jeans I've ever owned! The fit is perfect and the quality is outstanding. 
+                Worth every rupee."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600">
+                  R
+                </div>
+                <div>
+                  <div className="font-bold">Rahul Sharma</div>
+                  <div className="text-sm text-gray-500">Mumbai</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="text-5xl font-black mb-2">500+</div>
-              <div className="text-gray-600">Products</div>
+
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">★</span>
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                "Finally found jeans that actually fit! The straight fit is amazing. 
+                Fast delivery and great customer service too."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600">
+                  P
+                </div>
+                <div>
+                  <div className="font-bold">Priya Patel</div>
+                  <div className="text-sm text-gray-500">Delhi</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="text-5xl font-black mb-2">50+</div>
-              <div className="text-gray-600">Brands</div>
-            </div>
-            <div>
-              <div className="text-5xl font-black mb-2">100%</div>
-              <div className="text-gray-600">Satisfaction</div>
+
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">★</span>
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                "Ordered 3 pairs and love them all! The fabric quality is premium and 
+                they're so comfortable. Highly recommend!"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center font-bold text-green-600">
+                  A
+                </div>
+                <div>
+                  <div className="font-bold">Arjun Singh</div>
+                  <div className="text-sm text-gray-500">Bangalore</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-black text-white">
-        <div className="container text-center">
-          <h2 className="text-4xl font-black mb-4">Join Our Fashion Community</h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Be part of thousands of fashion enthusiasts who trust Webdesino for their style needs.
+      <section className="py-20 md:py-32 relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+        
+        <div className="container text-center relative z-10">
+          <h2 className="text-4xl md:text-6xl font-black mb-6 text-white">
+            Ready to Find Your
+            <br />
+            Perfect Fit?
+          </h2>
+          <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-2xl mx-auto">
+            Join 50,000+ happy customers who've discovered their favorite jeans at POCKET MOUSE
           </p>
-          <a
-            href="/"
-            className="inline-block bg-white text-black px-8 py-4 rounded-lg font-bold hover:bg-gray-200 transition"
-          >
-            Start Shopping
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/men"
+              className="bg-white text-black px-10 py-5 rounded-xl font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-2xl"
+            >
+              Shop Men's Collection
+            </Link>
+            <Link
+              href="/women"
+              className="bg-black/30 backdrop-blur-sm text-white border-2 border-white px-10 py-5 rounded-xl font-bold hover:bg-black/50 transition-all duration-300 transform hover:scale-105"
+            >
+              Shop Women's Collection
+            </Link>
+          </div>
+          
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
+            <div className="text-white">
+              <div className="text-4xl font-black mb-2">50K+</div>
+              <div className="text-blue-200 text-sm">Happy Customers</div>
+            </div>
+            <div className="text-white">
+              <div className="text-4xl font-black mb-2">100+</div>
+              <div className="text-blue-200 text-sm">Denim Styles</div>
+            </div>
+            <div className="text-white">
+              <div className="text-4xl font-black mb-2">4.8★</div>
+              <div className="text-blue-200 text-sm">Average Rating</div>
+            </div>
+            <div className="text-white">
+              <div className="text-4xl font-black mb-2">24/7</div>
+              <div className="text-blue-200 text-sm">Support</div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

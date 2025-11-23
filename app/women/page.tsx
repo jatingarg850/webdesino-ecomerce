@@ -3,21 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { SlidersHorizontal } from 'lucide-react';
 
 export default function WomenPage() {
   const [products, setProducts] = useState<any[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState('All');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProducts();
   }, []);
-
-  useEffect(() => {
-    filterProducts();
-  }, [selectedFilter, products]);
 
   const fetchProducts = async () => {
     try {
@@ -25,7 +18,6 @@ export default function WomenPage() {
       const data = await res.json();
       const womenProducts = data.products.filter((p: any) => p.category === 'women');
       setProducts(womenProducts);
-      setFilteredProducts(womenProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -33,36 +25,12 @@ export default function WomenPage() {
     }
   };
 
-  const filterProducts = () => {
-    if (selectedFilter === 'All') {
-      setFilteredProducts(products);
-      return;
-    }
-
-    const filtered = products.filter((product: any) => {
-      const subcategory = product.subcategory?.toLowerCase() || '';
-      const filter = selectedFilter.toLowerCase();
-      
-      if (filter === 'dresses' && subcategory.includes('dress')) return true;
-      if (filter === 'tops' && subcategory.includes('top')) return true;
-      if (filter === 'skirts' && subcategory.includes('skirt')) return true;
-      if (filter === 'jackets' && subcategory.includes('jacket')) return true;
-      if (filter === 'ethnic' && subcategory.includes('ethnic')) return true;
-      if (filter === 'casual' && (subcategory.includes('casual') || subcategory.includes('top'))) return true;
-      if (filter === 'formal' && subcategory.includes('formal')) return true;
-      
-      return false;
-    });
-
-    setFilteredProducts(filtered);
-  };
-
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Banner */}
       <section className="relative h-[400px] bg-gradient-to-r from-pink-500 to-rose-600 overflow-hidden">
         <Image
-          src="/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg"
+          src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908722/webdesino-products/bfox9wx3jua0ie8zu0df.jpg"
           alt="Women's Collection"
           fill
           className="object-cover opacity-30"
@@ -86,39 +54,14 @@ export default function WomenPage() {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="py-12 border-b">
-        <div className="container">
-          <div className="flex gap-4 overflow-x-auto pb-4">
-            {['All Jeans', 'Skinny', 'Bootcut', 'Flare', 'Straight', 'High Waist', 'Low Rise'].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedFilter(cat)}
-                className={`px-6 py-2 rounded-full border-2 font-semibold whitespace-nowrap transition ${
-                  selectedFilter === cat
-                    ? 'bg-pink-600 text-white border-pink-600'
-                    : 'border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Products Grid */}
       <section className="py-12">
         <div className="container">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-black mb-2">ALL PRODUCTS</h2>
-              <p className="text-gray-600">{filteredProducts.length} items</p>
+              <p className="text-gray-600">{products.length} items</p>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-50">
-              <SlidersHorizontal size={20} />
-              <span className="font-semibold">Filter</span>
-            </button>
           </div>
 
           {loading ? (
@@ -126,9 +69,9 @@ export default function WomenPage() {
               <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-pink-600 mx-auto mb-4"></div>
               <p className="text-gray-600">Loading products...</p>
             </div>
-          ) : filteredProducts.length > 0 ? (
+          ) : products.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {filteredProducts.map((product: any) => (
+              {products.map((product: any) => (
                 <Link
                   key={product._id}
                   href={`/products/${product._id}`}
@@ -136,7 +79,7 @@ export default function WomenPage() {
                 >
                   <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
                     <Image
-                      src={product.images[0] || '/clothes/vyjby_512.webp'}
+                      src={product.images[0] || 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763743836/webdesino-products/nwnfgeaujg3tj3ohraw2.png'}
                       alt={product.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"

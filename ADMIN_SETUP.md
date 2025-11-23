@@ -9,7 +9,7 @@ npm run create-admin
 ```
 
 This will create an admin account with:
-- **Email**: admin@webdesino.com
+- **Email**: admin@POCKET MOUSE.com
 - **Password**: admin123
 
 ⚠️ **Important**: Change the password after first login!

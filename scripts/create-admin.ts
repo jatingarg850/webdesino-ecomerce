@@ -22,7 +22,7 @@ async function createAdmin() {
   try {
     await connectDB();
 
-    const adminEmail = 'admin@webdesino.com';
+    const adminEmail = 'admin@POCKET MOUSE.com';
     const adminPassword = 'admin123';
 
     // Check if admin already exists

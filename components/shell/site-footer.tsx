@@ -39,16 +39,8 @@ export function SiteFooter() {
                   About Us
                 </Link>
               </li>
-              <li>
-                <Link href="/careers" className="hover:text-white transition-colors">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="/stores" className="hover:text-white transition-colors">
-                  Store Locator
-                </Link>
-              </li>
+             
+            
               <li>
                 <Link href="/contact" className="hover:text-white transition-colors">
                   Contact Us
@@ -89,18 +81,13 @@ export function SiteFooter() {
             <h4 className="font-bold text-lg mb-4">Shop</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <Link href="/c/men" className="hover:text-white transition-colors">
-                  Men
+                <Link href="/men" className="hover:text-white transition-colors">
+                  Men's Jeans
                 </Link>
               </li>
               <li>
-                <Link href="/c/women" className="hover:text-white transition-colors">
-                  Women
-                </Link>
-              </li>
-              <li>
-                <Link href="/c/kids" className="hover:text-white transition-colors">
-                  Kids
+                <Link href="/women" className="hover:text-white transition-colors">
+                  Women's Jeans
                 </Link>
               </li>
               <li>
@@ -108,6 +95,7 @@ export function SiteFooter() {
                   Sale
                 </Link>
               </li>
+              
             </ul>
           </div>
 
@@ -151,7 +139,7 @@ export function SiteFooter() {
       <div className="border-t border-gray-800">
         <div className="container py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-            <div>© 2025 Webdesino. All rights reserved.</div>
+            <div>© 2025 POCKET MOUSE. All rights reserved.</div>
             <div className="flex gap-6">
               <Link href="/privacy" className="hover:text-white transition-colors">
                 Privacy Policy

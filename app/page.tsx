@@ -62,7 +62,7 @@ export default async function Home() {
               <div className="hidden lg:flex items-center justify-end gap-4">
                 <div className="w-48 h-64 rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
                   <Image
-                    src="/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg"
+                    src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908725/webdesino-products/gmd0go065j8vsxzzzuf1.jpg"
                     alt="Fashion"
                     width={400}
                     height={600}
@@ -71,7 +71,7 @@ export default async function Home() {
                 </div>
                 <div className="w-56 h-80 rounded-2xl shadow-2xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
                   <Image
-                    src="/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg"
+                    src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908726/webdesino-products/kmfzxc1k7btmb3ddhjdv.jpg"
                     alt="Fashion"
                     width={500}
                     height={700}
@@ -98,7 +98,7 @@ export default async function Home() {
               className="group relative h-96 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
             >
               <Image
-                src="/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg"
+                src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908721/webdesino-products/vnkbc2lpyedhv8alkzwp.jpg"
                 alt="Men's Fashion"
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -115,7 +115,7 @@ export default async function Home() {
               className="group relative h-96 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
             >
               <Image
-                src="/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg"
+                src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908722/webdesino-products/bfox9wx3jua0ie8zu0df.jpg"
                 alt="Women's Fashion"
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -143,12 +143,12 @@ export default async function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[
-              { name: "Men's Jeans", href: '/men', image: '/clothes/vyjby_512.webp' },
-              { name: 'Slim Fit', href: '/men', image: '/clothes/keagan-henman-xPJYL0l5Ii8-unsplash.jpg' },
-              { name: 'Regular Fit', href: '/men', image: '/clothes/parker-burchfield-tvG4WvjgsEY-unsplash.jpg' },
-              { name: "Women's Jeans", href: '/women', image: '/clothes/heather-ford-5gkYsrH_ebY-unsplash.jpg' },
-              { name: 'Skinny Jeans', href: '/women', image: '/clothes/alexandra-gorn-WF0LSThlRmw-unsplash.jpg' },
-              { name: 'Designer Denim', href: '/brands', image: '/clothes/two-fashion-designers-atelier-with-dress-form.jpg' },
+              { name: "Men's Jeans", href: '/men', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763743836/webdesino-products/nwnfgeaujg3tj3ohraw2.png' },
+              { name: 'Slim Fit', href: '/men', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908725/webdesino-products/gmd0go065j8vsxzzzuf1.jpg' },
+              { name: 'Regular Fit', href: '/men', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908726/webdesino-products/kmfzxc1k7btmb3ddhjdv.jpg' },
+              { name: "Women's Jeans", href: '/women', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908722/webdesino-products/bfox9wx3jua0ie8zu0df.jpg' },
+              { name: 'Skinny Jeans', href: '/women', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908721/webdesino-products/vnkbc2lpyedhv8alkzwp.jpg' },
+              { name: 'Designer Denim', href: '/sale', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908729/webdesino-products/lhl2bqyoxzca33mt0x63.jpg' },
             ].map((cat, index) => (
               <Link
                 key={`${cat.name}-${index}`}
@@ -192,7 +192,7 @@ export default async function Home() {
                 >
                   <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-3 relative">
                     <Image
-                      src={product.images[0] || '/clothes/vyjby_512.webp'}
+                      src={product.images[0] || 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763743836/webdesino-products/nwnfgeaujg3tj3ohraw2.png'}
                       alt={product.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -232,27 +232,78 @@ export default async function Home() {
       </section>
 
       {/* Brand Banner */}
-      <section className="py-16 md:py-20 relative overflow-hidden">
-        <Image
-          src="/clothes/two-fashion-designers-atelier-with-dress-form.jpg"
-          alt="Brand Banner"
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/90 via-yellow-500/90 to-orange-500/90"></div>
-        <div className="container text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-black mb-4 text-white">
-            ALL EYES ON YOU
-          </h2>
-          <p className="text-xl text-white/90 mb-8">
-            Homegrown & Proud Since 2012
-          </p>
-          <Link
-            href="/brands"
-            className="inline-block bg-white text-black px-8 py-4 rounded-md font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
-          >
-            Our Story
-          </Link>
+      {/* All Eyes on You - Premium Denim Showcase */}
+      <section className="py-20 md:py-32 relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-slate-900">
+        {/* Floating Denim Texture Elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl"></div>
+
+        <div className="container relative z-10">
+          <div className="max-w-5xl mx-auto">
+            {/* Main Content */}
+            <div className="text-center mb-16">
+              <div className="inline-block mb-6">
+                <span className="bg-gradient-to-r from-blue-400 to-indigo-400 text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider">
+                  Premium Denim Collection
+                </span>
+              </div>
+              
+              <h2 className="text-5xl md:text-7xl font-black mb-6 text-white leading-tight">
+                ALL EYES
+                <br />
+                <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                  ON YOU
+                </span>
+              </h2>
+              
+              <p className="text-xl md:text-2xl text-blue-100 mb-4 max-w-2xl mx-auto">
+                Where Style Meets Comfort
+              </p>
+              
+              <p className="text-base md:text-lg text-blue-200/80 mb-12 max-w-3xl mx-auto">
+                Discover our handpicked collection of premium denim. From classic cuts to contemporary styles, 
+                find the perfect fit that makes you stand out.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link
+                  href="/men"
+                  className="group bg-white text-black px-8 py-4 rounded-lg font-bold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center gap-2"
+                >
+                  Shop Men's Jeans
+                  <ChevronRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                </Link>
+                <Link
+                  href="/women"
+                  className="group bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-lg font-bold hover:from-blue-600 hover:to-indigo-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center gap-2"
+                >
+                  Shop Women's Jeans
+                  <ChevronRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Stats/Features Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                <div className="text-3xl md:text-4xl font-black text-white mb-2">100+</div>
+                <div className="text-sm text-blue-200">Denim Styles</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                <div className="text-3xl md:text-4xl font-black text-white mb-2">50K+</div>
+                <div className="text-sm text-blue-200">Happy Customers</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                <div className="text-3xl md:text-4xl font-black text-white mb-2">4.8★</div>
+                <div className="text-sm text-blue-200">Average Rating</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                <div className="text-3xl md:text-4xl font-black text-white mb-2">24/7</div>
+                <div className="text-sm text-blue-200">Support</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

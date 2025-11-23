@@ -116,7 +116,7 @@ export default function ProductDetailPage() {
             {/* Main Image */}
             <div className="aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden relative">
               <Image
-                src={product.images[selectedImageIndex] || '/clothes/vyjby_512.webp'}
+                src={product.images[selectedImageIndex] || 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763743836/POCKET MOUSE-products/nwnfgeaujg3tj3ohraw2.png'}
                 alt={product.name}
                 fill
                 className="object-cover"

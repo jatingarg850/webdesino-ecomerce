@@ -18,7 +18,7 @@ export default function TermsPage() {
           <div className="prose prose-lg max-w-none">
             <div className="mb-12">
               <p className="text-lg text-gray-600 leading-relaxed">
-                Welcome to Webdesino. By accessing and using our website, you agree to be bound by these 
+                Welcome to POCKET MOUSE. By accessing and using our website, you agree to be bound by these 
                 Terms of Service. Please read them carefully before making any purchase.
               </p>
             </div>
@@ -148,7 +148,7 @@ export default function TermsPage() {
               <h2 className="text-3xl font-black mb-4">Intellectual Property</h2>
               <p className="text-gray-600">
                 All content on this website, including text, graphics, logos, images, and software, is 
-                the property of Webdesino and protected by copyright and trademark laws. You may not 
+                the property of POCKET MOUSE and protected by copyright and trademark laws. You may not 
                 reproduce, distribute, or create derivative works without our express written permission.
               </p>
             </div>
@@ -173,7 +173,7 @@ export default function TermsPage() {
             <div className="mb-12">
               <h2 className="text-3xl font-black mb-4">Limitation of Liability</h2>
               <p className="text-gray-600">
-                To the maximum extent permitted by law, Webdesino shall not be liable for any indirect, 
+                To the maximum extent permitted by law, POCKET MOUSE shall not be liable for any indirect, 
                 incidental, special, consequential, or punitive damages arising from your use of our 
                 website or products. Our total liability shall not exceed the amount you paid for the 
                 product in question.
@@ -206,7 +206,7 @@ export default function TermsPage() {
                 If you have any questions about these Terms of Service, please contact us:
               </p>
               <div className="space-y-2">
-                <p>Email: legal@webdesino.com</p>
+                <p>Email: legal@POCKET MOUSE.com</p>
                 <p>Phone: +91 1800-123-4567</p>
               </div>
             </div>
