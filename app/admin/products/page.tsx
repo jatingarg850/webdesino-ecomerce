@@ -12,6 +12,9 @@ export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [showNewSubcategoryInput, setShowNewSubcategoryInput] = useState(false);
+  const [newSubcategoryName, setNewSubcategoryName] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -31,7 +34,15 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     fetchProducts();
+    fetchSubcategories();
   }, []);
+
+  useEffect(() => {
+    // Fetch subcategories when category changes
+    if (showModal) {
+      fetchSubcategories(formData.category);
+    }
+  }, [formData.category, showModal]);
 
   useEffect(() => {
     if (searchQuery) {
@@ -59,8 +70,64 @@ export default function AdminProductsPage() {
     }
   };
 
+  const fetchSubcategories = async (category?: string) => {
+    try {
+      const url = category 
+        ? `/api/admin/subcategories?category=${category}`
+        : '/api/admin/subcategories';
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.success) {
+        setSubcategories(data.subcategories.filter((sub: any) => sub.isActive));
+      }
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+    }
+  };
+
+  const handleCreateNewSubcategory = async () => {
+    if (!newSubcategoryName.trim()) {
+      alert('Please enter a subcategory name');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/admin/subcategories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newSubcategoryName,
+          category: formData.category,
+          isActive: true
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Subcategory created successfully!');
+        setFormData({ ...formData, subcategory: newSubcategoryName });
+        setNewSubcategoryName('');
+        setShowNewSubcategoryInput(false);
+        fetchSubcategories(formData.category);
+      } else {
+        alert(data.error || 'Failed to create subcategory');
+      }
+    } catch (error) {
+      console.error('Error creating subcategory:', error);
+      alert('Error creating subcategory');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate subcategory
+    if (!formData.subcategory || formData.subcategory.trim() === '') {
+      alert('Please select or create a subcategory');
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -149,6 +216,8 @@ export default function AdminProductsPage() {
 
   const resetForm = () => {
     setEditingProduct(null);
+    setShowNewSubcategoryInput(false);
+    setNewSubcategoryName('');
     setFormData({
       name: '',
       slug: '',
@@ -351,14 +420,69 @@ export default function AdminProductsPage() {
 
                 <div>
                   <label className="block text-sm font-semibold mb-2">Subcategory *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.subcategory}
-                    onChange={(e) => setFormData({ ...formData, subcategory: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="T-Shirt, Jeans, etc."
-                  />
+                  {!showNewSubcategoryInput ? (
+                    <div className="space-y-2">
+                      <select
+                        required={!showNewSubcategoryInput}
+                        value={formData.subcategory}
+                        onChange={(e) => {
+                          if (e.target.value === '__new__') {
+                            setShowNewSubcategoryInput(true);
+                            setFormData({ ...formData, subcategory: '' });
+                          } else {
+                            setFormData({ ...formData, subcategory: e.target.value });
+                          }
+                        }}
+                        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      >
+                        <option value="">Select a subcategory</option>
+                        {subcategories.map((sub) => (
+                          <option key={sub._id} value={sub.name}>
+                            {sub.name}
+                          </option>
+                        ))}
+                        <option value="__new__" className="font-bold text-blue-600">
+                          + Add New Subcategory
+                        </option>
+                      </select>
+                      <p className="text-xs text-gray-500">
+                        Select from existing or add a new subcategory
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newSubcategoryName}
+                          onChange={(e) => setNewSubcategoryName(e.target.value)}
+                          className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                          placeholder="Enter new subcategory name"
+                          autoFocus
+                        />
+                        <button
+                          type="button"
+                          onClick={handleCreateNewSubcategory}
+                          className="px-4 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition"
+                        >
+                          Create
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowNewSubcategoryInput(false);
+                            setNewSubcategoryName('');
+                          }}
+                          className="px-4 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        This will create a new subcategory for {formData.category}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-span-2">

@@ -9,6 +9,7 @@
     "lint": "eslint",
     "seed": "tsx scripts/seed.ts",
     "seed:clothing": "tsx scripts/seed-clothing.ts",
+    "seed:complete": "tsx scripts/seed-complete.ts",
     "create-admin": "node scripts/create-admin.mjs"
   },
   "dependencies": {

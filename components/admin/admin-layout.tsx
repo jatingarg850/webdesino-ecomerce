@@ -11,6 +11,8 @@ import {
   Tag,
   Settings,
   LogOut,
+  Layers,
+  TrendingUp,
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -36,6 +38,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', href: '/admin/dashboard' },
     { icon: Package, label: 'Products', href: '/admin/products' },
+    { icon: Layers, label: 'Subcategories', href: '/admin/subcategories' },
+    { icon: TrendingUp, label: 'Trending Categories', href: '/admin/trending-categories' },
     { icon: ShoppingCart, label: 'Orders', href: '/admin/orders' },
     { icon: Users, label: 'Users', href: '/admin/users' },
     { icon: Tag, label: 'Brands', href: '/admin/brands' },

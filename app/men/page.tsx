@@ -1,17 +1,32 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function MenPage() {
+  const searchParams = useSearchParams();
+  const subcategoryFilter = searchParams.get('subcategory');
   
   const [products, setProducts] = useState<any[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    if (subcategoryFilter) {
+      const filtered = products.filter((p: any) => 
+        p.subcategory.toLowerCase().replace(/\s+/g, '-') === subcategoryFilter
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [subcategoryFilter, products]);
 
   const fetchProducts = async () => {
     try {
@@ -19,6 +34,7 @@ export default function MenPage() {
       const data = await res.json();
       const menProducts = data.products.filter((p: any) => p.category === 'men');
       setProducts(menProducts);
+      setFilteredProducts(menProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -60,9 +76,21 @@ export default function MenPage() {
         <div className="container">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-black mb-2">ALL PRODUCTS</h2>
-              <p className="text-gray-600">{products.length} items</p>
+              <h2 className="text-2xl font-black mb-2">
+                {subcategoryFilter 
+                  ? subcategoryFilter.replace(/-/g, ' ').toUpperCase() 
+                  : 'ALL PRODUCTS'}
+              </h2>
+              <p className="text-gray-600">{filteredProducts.length} items</p>
             </div>
+            {subcategoryFilter && (
+              <Link 
+                href="/men" 
+                className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+              >
+                Clear Filter
+              </Link>
+            )}
           </div>
 
           {loading ? (
@@ -70,9 +98,9 @@ export default function MenPage() {
               <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-black mx-auto mb-4"></div>
               <p className="text-gray-600">Loading products...</p>
             </div>
-          ) : products.length > 0 ? (
+          ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {products.map((product: any) => (
+              {filteredProducts.map((product: any) => (
                 <Link
                   key={product._id}
                   href={`/products/${product._id}`}

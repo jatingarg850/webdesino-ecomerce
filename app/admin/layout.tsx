@@ -12,7 +12,9 @@ import {
   LogOut,
   Menu,
   X,
-  Tag
+  Tag,
+  Layers,
+  TrendingUp
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -56,6 +58,8 @@ export default function AdminLayout({
   const navItems = [
     { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { href: '/admin/products', icon: Package, label: 'Products' },
+    { href: '/admin/subcategories', icon: Layers, label: 'Subcategories' },
+    { href: '/admin/trending-categories', icon: TrendingUp, label: 'Trending Categories' },
     { href: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
     { href: '/admin/users', icon: Users, label: 'Users' },
     { href: '/admin/brands', icon: Tag, label: 'Brands' },

@@ -16,8 +16,25 @@ async function getProducts() {
   }
 }
 
+async function getTrendingCategories() {
+  try {
+    await dbConnect();
+    const TrendingCategory = (await import('@/models/TrendingCategory')).default;
+    const categories = await TrendingCategory.find({ isActive: true })
+      .sort({ displayOrder: 1 })
+      .limit(8)
+      .lean();
+    console.log('✓ Fetched trending categories:', categories.length);
+    return JSON.parse(JSON.stringify(categories));
+  } catch (error) {
+    console.error('✗ Error fetching trending categories:', error);
+    return [];
+  }
+}
+
 export default async function Home() {
   const products = await getProducts();
+  const trendingCategories = await getTrendingCategories();
 
   return (
     <div className="min-h-screen bg-white">
@@ -141,33 +158,33 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {[
-              { name: "Men's Jeans", href: '/men', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763743836/webdesino-products/nwnfgeaujg3tj3ohraw2.png' },
-              { name: 'Slim Fit', href: '/men', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908725/webdesino-products/gmd0go065j8vsxzzzuf1.jpg' },
-              { name: 'Regular Fit', href: '/men', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908726/webdesino-products/kmfzxc1k7btmb3ddhjdv.jpg' },
-              { name: "Women's Jeans", href: '/women', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908722/webdesino-products/bfox9wx3jua0ie8zu0df.jpg' },
-              { name: 'Skinny Jeans', href: '/women', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908721/webdesino-products/vnkbc2lpyedhv8alkzwp.jpg' },
-              { name: 'Designer Denim', href: '/sale', image: 'https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908729/webdesino-products/lhl2bqyoxzca33mt0x63.jpg' },
-            ].map((cat, index) => (
-              <Link
-                key={`${cat.name}-${index}`}
-                href={cat.href}
-                className="group relative h-48 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                <Image
-                  src={cat.image}
-                  alt={cat.name}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-end text-white pb-4">
-                  <h3 className="text-lg font-bold">{cat.name}</h3>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {trendingCategories.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {trendingCategories.map((cat: any) => (
+                <Link
+                  key={cat._id}
+                  href={cat.linkUrl}
+                  className="group relative h-48 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  <Image
+                    src={cat.coverImage}
+                    alt={cat.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-end text-white pb-4">
+                    <h3 className="text-lg font-bold">{cat.name}</h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed">
+              <p className="text-gray-600 mb-2">No trending categories available</p>
+              <p className="text-sm text-gray-500">Add trending categories from the admin panel</p>
+            </div>
+          )}
         </div>
       </section>
 

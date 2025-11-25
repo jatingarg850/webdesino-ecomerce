@@ -16,6 +16,8 @@ export function SiteHeader() {
   const [mounted, setMounted] = useState(false);
   const [menDropdownOpen, setMenDropdownOpen] = useState(false);
   const [womenDropdownOpen, setWomenDropdownOpen] = useState(false);
+  const [menSubcategories, setMenSubcategories] = useState<any[]>([]);
+  const [womenSubcategories, setWomenSubcategories] = useState<any[]>([]);
   const cartCount = useCartStore((state) => state.getItemCount());
 
   // Prevent hydration mismatch
@@ -29,6 +31,32 @@ export function SiteHeader() {
     if (userData) {
       setUser(JSON.parse(userData));
     }
+  }, []);
+
+  // Fetch subcategories
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      try {
+        const [menRes, womenRes] = await Promise.all([
+          fetch('/api/admin/subcategories?category=men'),
+          fetch('/api/admin/subcategories?category=women')
+        ]);
+        
+        const menData = await menRes.json();
+        const womenData = await womenRes.json();
+        
+        if (menData.success) {
+          setMenSubcategories(menData.subcategories.filter((sub: any) => sub.isActive));
+        }
+        if (womenData.success) {
+          setWomenSubcategories(womenData.subcategories.filter((sub: any) => sub.isActive));
+        }
+      } catch (error) {
+        console.error('Error fetching subcategories:', error);
+      }
+    };
+
+    fetchSubcategories();
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -79,7 +107,7 @@ export function SiteHeader() {
                 onMouseLeave={() => setMenDropdownOpen(false)}
               >
                 <button className="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1 py-2">
-                  MEN JEANS
+                  MEN
                   <ChevronDown size={16} className={`transition-transform ${menDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {menDropdownOpen && (
@@ -88,15 +116,19 @@ export function SiteHeader() {
                       <Link href="/men" className="block px-4 py-2 text-sm hover:bg-gray-100 font-semibold">
                         All Jeans
                       </Link>
-                      <Link href="/men?fit=straight" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                        Straight Fit
-                      </Link>
-                      <Link href="/men?fit=loose" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                        Loose Fit
-                      </Link>
-                      <Link href="/men?fit=baggy" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                        Baggy Fit
-                      </Link>
+                      {menSubcategories.length > 0 ? (
+                        menSubcategories.map((sub) => (
+                          <Link 
+                            key={sub._id} 
+                            href={`/men?subcategory=${sub.slug}`} 
+                            className="block px-4 py-2 text-sm hover:bg-gray-100"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))
+                      ) : (
+                        <div className="px-4 py-2 text-sm text-gray-400">No subcategories</div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -109,7 +141,7 @@ export function SiteHeader() {
                 onMouseLeave={() => setWomenDropdownOpen(false)}
               >
                 <button className="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1 py-2">
-                  WOMEN JEANS
+                  WOMEN 
                   <ChevronDown size={16} className={`transition-transform ${womenDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {womenDropdownOpen && (
@@ -118,18 +150,19 @@ export function SiteHeader() {
                       <Link href="/women" className="block px-4 py-2 text-sm hover:bg-gray-100 font-semibold">
                         All Jeans
                       </Link>
-                      <Link href="/women?fit=flair" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                        Flair Jeans
-                      </Link>
-                      <Link href="/women?fit=straight" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                        Straight Jeans
-                      </Link>
-                      <Link href="/women?fit=bell-bottom" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                        Bell Bottom
-                      </Link>
-                      <Link href="/women?fit=baggy" className="block px-4 py-2 text-sm hover:bg-gray-100">
-                        Baggy
-                      </Link>
+                      {womenSubcategories.length > 0 ? (
+                        womenSubcategories.map((sub) => (
+                          <Link 
+                            key={sub._id} 
+                            href={`/women?subcategory=${sub.slug}`} 
+                            className="block px-4 py-2 text-sm hover:bg-gray-100"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))
+                      ) : (
+                        <div className="px-4 py-2 text-sm text-gray-400">No subcategories</div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -235,14 +268,14 @@ export function SiteHeader() {
                 className="block text-xl font-semibold hover:text-red-600 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                MEN JEANS
+                MEN 
               </Link>
               <Link
                 href="/women"
                 className="block text-xl font-semibold hover:text-red-600 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                WOMEN JEANS
+                WOMEN 
               </Link>
               <Link
                 href="/about"
