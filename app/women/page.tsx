@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function WomenPage() {
+function WomenPageContent() {
   const searchParams = useSearchParams();
   const subcategoryFilter = searchParams.get('subcategory');
   
@@ -147,5 +147,20 @@ export default function WomenPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function WomenPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-pink-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <WomenPageContent />
+    </Suspense>
   );
 }

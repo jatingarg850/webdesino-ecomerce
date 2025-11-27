@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json({ 
       success: true,
-      subcategories: subcategories.map(sub => ({
+      subcategories: subcategories.map((sub: any) => ({
         ...sub,
         _id: sub._id.toString()
       }))
