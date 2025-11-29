@@ -1,9 +1,25 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Instagram, Twitter, Youtube, Mail } from "lucide-react";
 
 export function SiteFooter() {
   return (
     <footer className="bg-gray-900 text-white mt-20">
+      {/* Logo Section */}
+      <div className="border-b border-gray-800">
+        <div className="container py-8">
+          <div className="flex justify-center">
+            <Image
+              src="/logo/logoo.png"
+              alt="Pocket Mouse"
+              width={180}
+              height={60}
+              className="h-14 w-auto brightness-0 invert"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Newsletter */}
       <div className="border-b border-gray-800">
         <div className="container py-12">

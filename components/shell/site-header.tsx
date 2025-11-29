@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingBag, Search, User, Heart, Menu, X, MapPin, Gift, ChevronDown } from "lucide-react";
@@ -18,6 +19,8 @@ export function SiteHeader() {
   const [womenDropdownOpen, setWomenDropdownOpen] = useState(false);
   const [menSubcategories, setMenSubcategories] = useState<any[]>([]);
   const [womenSubcategories, setWomenSubcategories] = useState<any[]>([]);
+  const [mobileMenOpen, setMobileMenOpen] = useState(false);
+  const [mobileWomenOpen, setMobileWomenOpen] = useState(false);
   const cartCount = useCartStore((state) => state.getItemCount());
 
   // Prevent hydration mismatch
@@ -84,18 +87,23 @@ export function SiteHeader() {
           <div className="flex items-center justify-between py-4">
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2"
+              className="lg:hidden p-2 -ml-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <div className="text-2xl md:text-3xl font-black tracking-tight">
-                POCKET MOUSE
-              </div>
+            {/* Logo - Centered on mobile, left on desktop */}
+            <Link href="/" className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">
+              <Image
+                src="/logo/logoo.png"
+                alt="Pocket Mouse"
+                width={150}
+                height={50}
+                className="h-8 md:h-10 lg:h-12 w-auto"
+                priority
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -177,7 +185,7 @@ export function SiteHeader() {
             </nav>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-3 md:gap-4">
+            <div className="flex items-center gap-2 md:gap-3">
               {/* Search */}
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
@@ -187,7 +195,7 @@ export function SiteHeader() {
                 <Search size={20} />
               </button>
 
-              {/* Track Order */}
+              {/* Track Order - Desktop only */}
               <Link
                 href="/track-order"
                 className="hidden md:flex items-center gap-1 text-sm hover:text-red-600 transition-colors"
@@ -220,7 +228,7 @@ export function SiteHeader() {
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="relative p-2 hover:bg-gray-100 rounded-full transition-colors -mr-2"
                 aria-label="Cart"
               >
                 <ShoppingBag size={20} />
@@ -254,46 +262,124 @@ export function SiteHeader() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-white animate-slide-in">
-          <div className="container py-6">
-            <div className="flex items-center justify-between mb-8">
-              <div className="text-2xl font-black">MENU</div>
-              <button onClick={() => setMobileMenuOpen(false)}>
-                <X size={24} />
-              </button>
+        <>
+          {/* Backdrop */}
+          <div 
+            className="lg:hidden fixed inset-0 z-[60] bg-black/50 animate-fade-in"
+            onClick={() => setMobileMenuOpen(false)}
+          ></div>
+          
+          {/* Menu Panel */}
+          <div className="lg:hidden fixed inset-y-0 left-0 z-[70] w-[85%] max-w-sm bg-white shadow-2xl overflow-y-auto animate-slide-in-left">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-8 pb-4 border-b">
+                <Image
+                  src="/logo/logoo.png"
+                  alt="Pocket Mouse"
+                  width={120}
+                  height={40}
+                  className="h-8 w-auto"
+                />
+                <button 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+              
+              <nav className="space-y-2">
+                {/* Men's Section */}
+                <div className="border-b pb-2">
+                  <button
+                    onClick={() => setMobileMenOpen(!mobileMenOpen)}
+                    className="flex items-center justify-between w-full text-left text-lg font-bold hover:text-red-600 transition-colors py-3"
+                  >
+                    <span>MEN JEANS</span>
+                    <ChevronDown 
+                      size={20} 
+                      className={`transition-transform duration-200 ${mobileMenOpen ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {mobileMenOpen && (
+                    <div className="ml-4 mt-2 space-y-2 animate-fade-in">
+                      <Link
+                        href="/men"
+                        className="block text-base text-gray-700 hover:text-red-600 transition-colors py-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        All Jeans
+                      </Link>
+                      {menSubcategories.map((sub) => (
+                        <Link
+                          key={sub._id}
+                          href={`/men?subcategory=${sub.slug}`}
+                          className="block text-base text-gray-600 hover:text-red-600 transition-colors py-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Women's Section */}
+                <div className="border-b pb-2">
+                  <button
+                    onClick={() => setMobileWomenOpen(!mobileWomenOpen)}
+                    className="flex items-center justify-between w-full text-left text-lg font-bold hover:text-red-600 transition-colors py-3"
+                  >
+                    <span>WOMEN JEANS</span>
+                    <ChevronDown 
+                      size={20} 
+                      className={`transition-transform duration-200 ${mobileWomenOpen ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {mobileWomenOpen && (
+                    <div className="ml-4 mt-2 space-y-2 animate-fade-in">
+                      <Link
+                        href="/women"
+                        className="block text-base text-gray-700 hover:text-red-600 transition-colors py-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        All Jeans
+                      </Link>
+                      {womenSubcategories.map((sub) => (
+                        <Link
+                          key={sub._id}
+                          href={`/women?subcategory=${sub.slug}`}
+                          className="block text-base text-gray-600 hover:text-red-600 transition-colors py-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* About */}
+                <Link
+                  href="/about"
+                  className="block text-lg font-bold hover:text-red-600 transition-colors py-3 border-b"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  ABOUT
+                </Link>
+
+                {/* Sale */}
+                <Link
+                  href="/sale"
+                  className="block text-lg font-bold text-red-600 hover:text-red-700 transition-colors py-3"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  SALE
+                </Link>
+              </nav>
             </div>
-            <nav className="space-y-6">
-              <Link
-                href="/men"
-                className="block text-xl font-semibold hover:text-red-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                MEN 
-              </Link>
-              <Link
-                href="/women"
-                className="block text-xl font-semibold hover:text-red-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                WOMEN 
-              </Link>
-              <Link
-                href="/about"
-                className="block text-xl font-semibold hover:text-red-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                ABOUT
-              </Link>
-              <Link
-                href="/sale"
-                className="block text-xl font-semibold text-red-600 hover:text-red-700 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                SALE
-              </Link>
-            </nav>
           </div>
-        </div>
+        </>
       )}
     </>
   );
