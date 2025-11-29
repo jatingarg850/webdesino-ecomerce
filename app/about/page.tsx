@@ -23,14 +23,14 @@ export default function AboutPage() {
                 </span>
               </div>
               <h1 className="text-5xl md:text-7xl font-black mb-6 text-white leading-tight">
-                CRAFTING DENIM
+                POCKET MOUSE
                 <br />
                 <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                  PERFECTION
+                  DENIM FOR ALL
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed">
-                Where premium quality meets timeless style. We're not just selling jeans—we're creating confidence.
+                High-quality denim accessible to everyone. Premium feel, affordable price — ₹1000–₹1200.
               </p>
               <div className="flex gap-4">
                 <Link
@@ -65,28 +65,26 @@ export default function AboutPage() {
                 </span>
               </div>
               <h2 className="text-4xl md:text-5xl font-black mb-6">
-                Born from a Passion for
-                <span className="text-blue-600"> Perfect Fit</span>
+                Born in the Hills of
+                <span className="text-blue-600"> Northeast India</span>
               </h2>
               <div className="space-y-4 text-gray-600 text-lg leading-relaxed">
                 <p>
-                  In 2024, we set out on a mission to revolutionize the denim industry. Frustrated by the lack of quality, 
-                  affordable jeans that actually fit well, we decided to create something different.
+                  <strong className="text-black">Pocket Mouse</strong> is a modern denim brand born in the hills of the Northeast, 
+                  built with one mission — to make high-quality denim accessible to everyone.
                 </p>
                 <p>
-                  <strong className="text-black">POCKET MOUSE</strong> was born from countless hours of research, fabric testing, 
-                  and fit sessions. We partnered with master craftsmen who share our obsession with detail and quality.
+                  We design jeans that fit real people, last longer, and feel premium without the premium price tag. 
+                  Our focus is simple: great fabric, great durability, great style — at just ₹1000–₹1200.
                 </p>
                 <p>
-                  Today, we're proud to offer premium denim that doesn't compromise on comfort, style, or your budget. 
-                  Every pair tells a story of dedication, craftsmanship, and the belief that everyone deserves jeans 
-                  that make them feel incredible.
+                  Pocket Mouse is made for the youth, the creators, the dreamers, and for anyone who wants effortless style every day.
                 </p>
               </div>
               <div className="mt-8 flex gap-6">
                 <div>
-                  <div className="text-3xl font-black text-blue-600">50K+</div>
-                  <div className="text-sm text-gray-600">Happy Customers</div>
+                  <div className="text-3xl font-black text-blue-600">₹1000</div>
+                  <div className="text-sm text-gray-600">Starting Price</div>
                 </div>
                 <div>
                   <div className="text-3xl font-black text-blue-600">100+</div>
@@ -280,12 +278,12 @@ export default function AboutPage() {
         
         <div className="container text-center relative z-10">
           <h2 className="text-4xl md:text-6xl font-black mb-6 text-white">
-            Ready to Find Your
+            Effortless Style
             <br />
-            Perfect Fit?
+            Every Day
           </h2>
           <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-2xl mx-auto">
-            Join 50,000+ happy customers who've discovered their favorite jeans at POCKET MOUSE
+            Premium denim for the youth, creators, and dreamers — at just ₹1000–₹1200
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -304,20 +302,20 @@ export default function AboutPage() {
           
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
             <div className="text-white">
-              <div className="text-4xl font-black mb-2">50K+</div>
-              <div className="text-blue-200 text-sm">Happy Customers</div>
+              <div className="text-4xl font-black mb-2">₹1000</div>
+              <div className="text-blue-200 text-sm">Starting Price</div>
             </div>
             <div className="text-white">
-              <div className="text-4xl font-black mb-2">100+</div>
-              <div className="text-blue-200 text-sm">Denim Styles</div>
+              <div className="text-4xl font-black mb-2">Premium</div>
+              <div className="text-blue-200 text-sm">Quality Fabric</div>
             </div>
             <div className="text-white">
-              <div className="text-4xl font-black mb-2">4.8★</div>
-              <div className="text-blue-200 text-sm">Average Rating</div>
+              <div className="text-4xl font-black mb-2">Real</div>
+              <div className="text-blue-200 text-sm">Fit for People</div>
             </div>
             <div className="text-white">
-              <div className="text-4xl font-black mb-2">24/7</div>
-              <div className="text-blue-200 text-sm">Support</div>
+              <div className="text-4xl font-black mb-2">Durable</div>
+              <div className="text-blue-200 text-sm">Long Lasting</div>
             </div>
           </div>
         </div>

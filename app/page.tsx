@@ -37,7 +37,7 @@ export default async function Home() {
   const trendingCategories = await getTrendingCategories();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white" suppressHydrationWarning>
       {/* Hero Section - Full Width */}
       <section className="relative w-full h-[500px] md:h-[600px] bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
         <div className="absolute inset-0 flex items-center">
