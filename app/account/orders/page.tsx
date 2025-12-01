@@ -4,13 +4,15 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Package, ArrowLeft } from 'lucide-react';
+import { Package, ArrowLeft, FileText } from 'lucide-react';
+import InvoiceViewer from '@/components/invoice/invoice-viewer';
 
 export default function OrdersPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrderForInvoice, setSelectedOrderForInvoice] = useState<any>(null);
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -131,16 +133,33 @@ export default function OrdersPage() {
                     <div className="text-sm text-gray-600">Total Amount</div>
                     <div className="text-xl font-black">₹{order.total}</div>
                   </div>
-                  <Link
-                    href={`/track-order?order=${order.orderNumber}`}
-                    className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:bg-gray-800 transition"
-                  >
-                    Track Order
-                  </Link>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setSelectedOrderForInvoice(order)}
+                      className="flex items-center gap-2 bg-white border-2 border-black text-black px-6 py-2 rounded-md font-semibold hover:bg-gray-50 transition"
+                    >
+                      <FileText size={18} />
+                      Invoice
+                    </button>
+                    <Link
+                      href={`/track-order?order=${order.orderNumber}`}
+                      className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:bg-gray-800 transition"
+                    >
+                      Track Order
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+        )}
+
+        {/* Invoice Modal */}
+        {selectedOrderForInvoice && (
+          <InvoiceViewer
+            order={selectedOrderForInvoice}
+            onClose={() => setSelectedOrderForInvoice(null)}
+          />
         )}
       </div>
     </div>

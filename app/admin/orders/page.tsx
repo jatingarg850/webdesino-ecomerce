@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Search, Eye, X, FileText, Printer } from 'lucide-react';
+import InvoiceViewer from '@/components/invoice/invoice-viewer';
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -205,6 +206,8 @@ export default function AdminOrdersPage() {
     labelWindow.document.write(labelHTML);
     labelWindow.document.close();
   };
+
+  const [selectedOrderForInvoice, setSelectedOrderForInvoice] = useState<any>(null);
 
   const generateInvoice = (order: any) => {
     const invoiceWindow = window.open('', '_blank');
@@ -460,11 +463,18 @@ export default function AdminOrdersPage() {
               {/* Action Buttons */}
               <div className="flex gap-3">
                 <button
-                  onClick={() => generateInvoice(selectedOrder)}
+                  onClick={() => setSelectedOrderForInvoice(selectedOrder)}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                 >
                   <FileText size={18} />
-                  Generate Invoice
+                  View Invoice
+                </button>
+                <button
+                  onClick={() => generateInvoice(selectedOrder)}
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                >
+                  <FileText size={18} />
+                  Print Invoice
                 </button>
                 <button
                   onClick={() => generateShippingLabel(selectedOrder)}
@@ -586,6 +596,15 @@ export default function AdminOrdersPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Invoice Viewer Modal */}
+      {selectedOrderForInvoice && (
+        <InvoiceViewer
+          order={selectedOrderForInvoice}
+          onClose={() => setSelectedOrderForInvoice(null)}
+          storeSettings={storeSettings}
+        />
       )}
     </div>
   );

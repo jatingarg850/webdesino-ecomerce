@@ -3,25 +3,44 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle, Package, Truck } from 'lucide-react';
+import { CheckCircle, Package, Truck, FileText } from 'lucide-react';
+import InvoiceViewer from '@/components/invoice/invoice-viewer';
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId');
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showInvoice, setShowInvoice] = useState(false);
+  const [storeSettings, setStoreSettings] = useState<any>(null);
+
+  useEffect(() => {
+    // Load store settings
+    const settings = localStorage.getItem('storeSettings');
+    if (settings) {
+      setStoreSettings(JSON.parse(settings));
+    }
+  }, []);
 
   useEffect(() => {
     if (orderId) {
-      // In a real app, fetch order details from API
-      setOrder({
-        orderNumber: 'WD' + Date.now(),
-        total: 0,
-        paymentMethod: 'COD',
-      });
-      setLoading(false);
+      fetchOrderDetails(orderId);
     }
   }, [orderId]);
+
+  const fetchOrderDetails = async (id: string) => {
+    try {
+      const response = await fetch(`/api/orders/${id}`);
+      const data = await response.json();
+      if (data.success) {
+        setOrder(data.order);
+      }
+    } catch (error) {
+      console.error('Error fetching order:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -47,16 +66,31 @@ function OrderSuccessContent() {
 
           {order && (
             <div className="bg-gray-50 rounded-lg p-6 mb-8">
-              <div className="grid grid-cols-2 gap-4 text-left">
+              <div className="grid grid-cols-2 gap-4 text-left mb-4">
                 <div>
                   <div className="text-sm text-gray-600 mb-1">Order Number</div>
                   <div className="font-bold">{order.orderNumber}</div>
                 </div>
                 <div>
+                  <div className="text-sm text-gray-600 mb-1">Total Amount</div>
+                  <div className="font-bold text-lg">₹{order.total}</div>
+                </div>
+                <div>
                   <div className="text-sm text-gray-600 mb-1">Payment Method</div>
                   <div className="font-bold">{order.paymentMethod}</div>
                 </div>
+                <div>
+                  <div className="text-sm text-gray-600 mb-1">Order Status</div>
+                  <div className="font-bold text-green-600">{order.orderStatus}</div>
+                </div>
               </div>
+              <button
+                onClick={() => setShowInvoice(true)}
+                className="w-full flex items-center justify-center gap-2 bg-white border-2 border-black text-black px-6 py-3 rounded-md font-semibold hover:bg-gray-50 transition"
+              >
+                <FileText size={20} />
+                View Invoice
+              </button>
             </div>
           )}
 
@@ -92,6 +126,15 @@ function OrderSuccessContent() {
             </Link>
           </div>
         </div>
+
+        {/* Invoice Modal */}
+        {showInvoice && order && (
+          <InvoiceViewer
+            order={order}
+            onClose={() => setShowInvoice(false)}
+            storeSettings={storeSettings}
+          />
+        )}
       </div>
     </div>
   );
