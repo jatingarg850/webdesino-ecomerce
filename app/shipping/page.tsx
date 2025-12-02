@@ -1,53 +1,82 @@
-import { Truck, Package, MapPin, Clock, DollarSign, CheckCircle } from 'lucide-react';
+import { Truck, Package, MapPin, Clock, CheckCircle, IndianRupee } from 'lucide-react';
 
 export default function ShippingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="bg-gradient-to-r from-green-600 to-teal-600 text-white py-20">
+      <section className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-20">
         <div className="container text-center">
           <Truck className="w-20 h-20 mx-auto mb-6" />
-          <h1 className="text-5xl font-black mb-4">Shipping Information</h1>
-          <p className="text-xl text-green-100">Fast, reliable delivery across India</p>
+          <h1 className="text-5xl font-black mb-4">Shipping Policy</h1>
+          <p className="text-xl text-green-100">Fast & Reliable Delivery Across India</p>
         </div>
       </section>
 
       {/* Content */}
       <section className="py-16">
         <div className="container max-w-4xl">
-          {/* Free Shipping Banner */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl p-8 mb-12 text-center">
-            <DollarSign className="w-16 h-16 mx-auto mb-4" />
-            <h2 className="text-3xl font-black mb-2">FREE SHIPPING</h2>
-            <p className="text-xl">On all orders above ₹999</p>
+          {/* 7 Days Delivery Banner */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-10 mb-12 text-center">
+            <Clock className="w-20 h-20 mx-auto mb-4" />
+            <h2 className="text-4xl font-black mb-3">7 DAYS DELIVERY</h2>
+            <p className="text-2xl mb-2">Guaranteed Delivery Within 7 Days</p>
+            <p className="text-lg text-blue-100">To all locations across India</p>
           </div>
 
-          {/* Delivery Times */}
+          {/* Domestic Delivery Only */}
           <div className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-blue-600" />
+            <div className="bg-orange-50 border-2 border-orange-500 rounded-xl p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <MapPin className="w-8 h-8 text-orange-600" />
+                <h2 className="text-3xl font-black">Domestic Delivery Only</h2>
               </div>
-              <h2 className="text-3xl font-black">Delivery Times</h2>
+              <p className="text-lg text-gray-700">
+                POCKET MOUSE currently ships only within India. We deliver to all states and union territories 
+                including remote locations. International shipping is not available at this time.
+              </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gray-50 rounded-xl p-6 text-center">
-                <MapPin className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Metro Cities</h3>
-                <p className="text-3xl font-black text-green-600 mb-2">3-5 Days</p>
-                <p className="text-sm text-gray-600">Mumbai, Delhi, Bangalore, etc.</p>
+          </div>
+
+          {/* Delivery Timeline */}
+          <div className="mb-12">
+            <h2 className="text-3xl font-black mb-6">Delivery Timeline</h2>
+            <div className="bg-gray-50 rounded-xl p-8">
+              <div className="text-center mb-6">
+                <div className="inline-block bg-green-600 text-white px-8 py-4 rounded-xl">
+                  <p className="text-sm uppercase tracking-wide mb-1">Standard Delivery</p>
+                  <p className="text-5xl font-black">7 Days</p>
+                  <p className="text-sm mt-1">Maximum delivery time</p>
+                </div>
               </div>
-              <div className="bg-gray-50 rounded-xl p-6 text-center">
-                <MapPin className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Other Cities</h3>
-                <p className="text-3xl font-black text-blue-600 mb-2">5-7 Days</p>
-                <p className="text-sm text-gray-600">Tier 2 & Tier 3 cities</p>
-              </div>
-              <div className="bg-gray-50 rounded-xl p-6 text-center">
-                <MapPin className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Remote Areas</h3>
-                <p className="text-3xl font-black text-purple-600 mb-2">7-10 Days</p>
-                <p className="text-sm text-gray-600">Hill stations & remote locations</p>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-bold text-lg">All Orders Delivered Within 7 Days</p>
+                    <p className="text-gray-600">
+                      Whether you're in a metro city or a remote village, your order will reach you within 7 days 
+                      of placing the order.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-bold text-lg">Processing Time: 24 Hours</p>
+                    <p className="text-gray-600">
+                      Orders are processed and dispatched within 24 hours of confirmation.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-bold text-lg">Real-Time Tracking</p>
+                    <p className="text-gray-600">
+                      Track your order every step of the way with SMS and email updates.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -55,161 +84,146 @@ export default function ShippingPage() {
           {/* Shipping Charges */}
           <div className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-green-600" />
-              </div>
+              <IndianRupee className="w-8 h-8 text-blue-600" />
               <h2 className="text-3xl font-black">Shipping Charges</h2>
             </div>
-            <div className="bg-gray-50 rounded-xl p-6">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 font-bold">Order Value</th>
-                    <th className="text-left py-3 font-bold">Shipping Charge</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">Above ₹999</td>
-                    <td className="py-3 font-bold text-green-600">FREE</td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="py-3 text-gray-600">₹500 - ₹999</td>
-                    <td className="py-3 font-bold">₹99</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 text-gray-600">Below ₹500</td>
-                    <td className="py-3 font-bold">₹99</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 text-center">
+                <div className="text-green-600 font-black text-6xl mb-3">FREE</div>
+                <p className="text-xl font-bold mb-2">Orders Above ₹999</p>
+                <p className="text-gray-600">Enjoy free shipping on all orders above ₹999</p>
+              </div>
+              <div className="bg-gray-50 border-2 border-gray-300 rounded-xl p-6 text-center">
+                <div className="text-gray-900 font-black text-6xl mb-3">₹99</div>
+                <p className="text-xl font-bold mb-2">Orders Below ₹999</p>
+                <p className="text-gray-600">Flat shipping charge for orders under ₹999</p>
+              </div>
             </div>
           </div>
 
           {/* Shipping Process */}
           <div className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Package className="w-6 h-6 text-purple-600" />
-              </div>
-              <h2 className="text-3xl font-black">How It Works</h2>
+              <Package className="w-8 h-8 text-purple-600" />
+              <h2 className="text-3xl font-black">How Shipping Works</h2>
             </div>
-            <div className="space-y-4">
-              <div className="flex gap-4 items-start">
-                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
+            <div className="space-y-6">
+              <div className="flex gap-4">
+                <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-2xl flex-shrink-0">
                   1
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Order Placed</h3>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold mb-2">Order Confirmation</h3>
                   <p className="text-gray-600">
-                    Once you place your order, you'll receive a confirmation email with your order details.
+                    Once you place your order, you'll receive an instant confirmation email with order details 
+                    and expected delivery date.
                   </p>
                 </div>
               </div>
-              <div className="flex gap-4 items-start">
-                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
+              <div className="flex gap-4">
+                <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-2xl flex-shrink-0">
                   2
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Order Processing</h3>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold mb-2">Order Processing (24 Hours)</h3>
                   <p className="text-gray-600">
-                    Our team processes your order within 24 hours and prepares it for shipment.
+                    Our team carefully packs your order within 24 hours and hands it over to our courier partner.
                   </p>
                 </div>
               </div>
-              <div className="flex gap-4 items-start">
-                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
+              <div className="flex gap-4">
+                <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-2xl flex-shrink-0">
                   3
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Shipped</h3>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold mb-2">In Transit</h3>
                   <p className="text-gray-600">
-                    Your order is handed over to our courier partner. You'll receive tracking details via email and SMS.
+                    Your order is on its way! Track it in real-time using the tracking number sent via SMS and email.
                   </p>
                 </div>
               </div>
-              <div className="flex gap-4 items-start">
-                <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
+              <div className="flex gap-4">
+                <div className="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center font-black text-2xl flex-shrink-0">
                   4
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Delivered</h3>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold mb-2">Delivered (Within 7 Days)</h3>
                   <p className="text-gray-600">
-                    Your package arrives at your doorstep. Enjoy your new purchase!
+                    Your package arrives at your doorstep within 7 days. Sign and enjoy your new purchase!
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Courier Partners */}
+          {/* Coverage Areas */}
           <div className="mb-12">
-            <h2 className="text-3xl font-black mb-6">Our Courier Partners</h2>
+            <h2 className="text-3xl font-black mb-6">Delivery Coverage</h2>
             <div className="bg-gray-50 rounded-xl p-6">
-              <p className="text-gray-600 mb-4">
-                We work with India's most trusted courier services to ensure safe and timely delivery:
+              <p className="text-gray-700 mb-4 text-lg">
+                We deliver to all pin codes across India, including:
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="bg-white rounded-lg p-4 font-semibold">Blue Dart</div>
-                <div className="bg-white rounded-lg p-4 font-semibold">Delhivery</div>
-                <div className="bg-white rounded-lg p-4 font-semibold">FedEx</div>
-                <div className="bg-white rounded-lg p-4 font-semibold">DTDC</div>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="bg-white rounded-lg p-4">
+                  <CheckCircle className="w-6 h-6 text-green-600 mb-2" />
+                  <p className="font-bold">Metro Cities</p>
+                  <p className="text-sm text-gray-600">Mumbai, Delhi, Bangalore, Chennai, Kolkata, Hyderabad</p>
+                </div>
+                <div className="bg-white rounded-lg p-4">
+                  <CheckCircle className="w-6 h-6 text-green-600 mb-2" />
+                  <p className="font-bold">Tier 2 & 3 Cities</p>
+                  <p className="text-sm text-gray-600">All major and minor cities across India</p>
+                </div>
+                <div className="bg-white rounded-lg p-4">
+                  <CheckCircle className="w-6 h-6 text-green-600 mb-2" />
+                  <p className="font-bold">Remote Areas</p>
+                  <p className="text-sm text-gray-600">Villages, hill stations, and remote locations</p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Important Notes */}
+          {/* Important Information */}
           <div className="mb-12">
-            <h2 className="text-3xl font-black mb-6">Important Notes</h2>
+            <h2 className="text-3xl font-black mb-6">Important Information</h2>
             <div className="space-y-4">
-              <div className="flex gap-3 items-start bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-1" />
-                <div>
-                  <p className="text-gray-700">
-                    <strong>Address Accuracy:</strong> Please ensure your shipping address is complete and accurate. 
-                    We are not responsible for delays or non-delivery due to incorrect addresses.
-                  </p>
-                </div>
+              <div className="bg-blue-50 border-l-4 border-blue-600 rounded-lg p-4">
+                <p className="font-bold mb-1">📍 Accurate Address Required</p>
+                <p className="text-gray-600 text-sm">
+                  Please ensure your shipping address is complete and accurate. Include landmarks for easier delivery.
+                </p>
               </div>
-              <div className="flex gap-3 items-start bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
-                <div>
-                  <p className="text-gray-700">
-                    <strong>Tracking:</strong> Track your order anytime using the tracking number sent to your email 
-                    or through our Track Order page.
-                  </p>
-                </div>
+              <div className="bg-purple-50 border-l-4 border-purple-600 rounded-lg p-4">
+                <p className="font-bold mb-1">📦 Order Tracking</p>
+                <p className="text-gray-600 text-sm">
+                  You'll receive tracking details via SMS and email once your order is shipped. Track anytime on our website.
+                </p>
               </div>
-              <div className="flex gap-3 items-start bg-green-50 border border-green-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <div>
-                  <p className="text-gray-700">
-                    <strong>Delivery Attempts:</strong> Our courier partners make 2-3 delivery attempts. If delivery 
-                    fails, the package will be returned to us.
-                  </p>
-                </div>
+              <div className="bg-orange-50 border-l-4 border-orange-600 rounded-lg p-4">
+                <p className="font-bold mb-1">🚪 Delivery Attempts</p>
+                <p className="text-gray-600 text-sm">
+                  Our courier makes 2-3 delivery attempts. Please ensure someone is available to receive the package.
+                </p>
               </div>
-              <div className="flex gap-3 items-start bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-                <div>
-                  <p className="text-gray-700">
-                    <strong>Holidays & Weekends:</strong> Orders placed on weekends or public holidays will be 
-                    processed on the next business day.
-                  </p>
-                </div>
+              <div className="bg-green-50 border-l-4 border-green-600 rounded-lg p-4">
+                <p className="font-bold mb-1">📞 Contact for Delivery Issues</p>
+                <p className="text-gray-600 text-sm">
+                  If you face any delivery issues, contact our support team immediately for assistance.
+                </p>
               </div>
             </div>
           </div>
 
           {/* Contact */}
-          <div className="bg-gray-900 text-white rounded-xl p-8 text-center">
-            <h2 className="text-2xl font-black mb-4">Need Help with Shipping?</h2>
+          <div className="bg-gradient-to-r from-gray-900 to-gray-700 text-white rounded-xl p-8 text-center">
+            <h2 className="text-2xl font-black mb-4">Questions About Shipping?</h2>
             <p className="text-gray-300 mb-6">
-              Our customer support team is here to assist you
+              Our customer support team is here to help
             </p>
             <div className="space-y-2">
-              <p>Email: shipping@POCKET MOUSE.com</p>
-              <p>Phone: +91 1800-123-4567</p>
+              <p>📧 Email: shipping@pocketmouse.com</p>
+              <p>📞 Phone: +91 1800-123-4567</p>
+              <p className="text-sm text-gray-400 mt-4">Available Mon-Sat, 9 AM - 6 PM IST</p>
             </div>
           </div>
         </div>
