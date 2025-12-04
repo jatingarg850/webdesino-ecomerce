@@ -7,7 +7,7 @@ services:
     buildCommand: |
       npm ci --prefer-offline --no-audit --no-fund --loglevel=error
       rm -rf .next
-      npm run build
+      NODE_OPTIONS="--max-old-space-size=480" npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
