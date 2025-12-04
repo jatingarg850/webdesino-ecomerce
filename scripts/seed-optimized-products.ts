@@ -4,15 +4,16 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 
-// Cloudinary base URL with optimization parameters
-const CLOUDINARY_BASE = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
-
-// Optimization transformations - high quality
-const getOptimizedUrl = (path: string) => {
-  return `${CLOUDINARY_BASE}/c_fill,w_1000,h_1250,q_auto:best,f_auto/${path}`;
+// Use local images from public folder
+const getLocalImageUrl = (folder: string, imageNumber: number) => {
+  const extension = folder === 'male' ? 'jpg' : 'PNG';
+  const fileName = folder === 'male' 
+    ? `IMG-20251204-WA00${String(27 + imageNumber).padStart(2, '0')}.${extension}`
+    : `IMG_${3930 + imageNumber}.${extension}`;
+  return `/ecom-clothes-photos/${folder}/${fileName}`;
 };
 
-// Product data with optimized Cloudinary URLs
+// Product data with local image URLs
 const products = [
   // MEN'S STRAIGHT FIT (3 products)
   {
@@ -22,7 +23,7 @@ const products = [
     price: 1199,
     category: "men",
     subcategory: "straight-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/1"), getOptimizedUrl("ecom-clothes-photos/male/2")],
+    images: [getLocalImageUrl("male", 1), getLocalImageUrl("male", 2)],
     sizes: ["28", "30", "32", "34", "36", "38"],
     colors: ["Dark Blue"],
     inStock: true,
@@ -36,7 +37,7 @@ const products = [
     price: 1099,
     category: "men",
     subcategory: "straight-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/3"), getOptimizedUrl("ecom-clothes-photos/male/4")],
+    images: [getLocalImageUrl("male", 3), getLocalImageUrl("male", 4)],
     sizes: ["28", "30", "32", "34", "36"],
     colors: ["Light Blue"],
     inStock: true,
@@ -50,7 +51,7 @@ const products = [
     oldPrice: 1499,
     category: "men",
     subcategory: "straight-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/5"), getOptimizedUrl("ecom-clothes-photos/male/6")],
+    images: [getLocalImageUrl("male", 5), getLocalImageUrl("male", 6)],
     sizes: ["30", "32", "34", "36", "38"],
     colors: ["Black"],
     inStock: true,
@@ -67,7 +68,7 @@ const products = [
     price: 1149,
     category: "men",
     subcategory: "loose-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/7"), getOptimizedUrl("ecom-clothes-photos/male/8")],
+    images: [getLocalImageUrl("male", 7), getLocalImageUrl("male", 8)],
     sizes: ["28", "30", "32", "34", "36", "38"],
     colors: ["Medium Blue"],
     inStock: true,
@@ -81,7 +82,7 @@ const products = [
     oldPrice: 1199,
     category: "men",
     subcategory: "loose-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/9"), getOptimizedUrl("ecom-clothes-photos/male/10")],
+    images: [getLocalImageUrl("male", 9), getLocalImageUrl("male", 10)],
     sizes: ["30", "32", "34", "36"],
     colors: ["Vintage Blue"],
     inStock: true,
@@ -96,7 +97,7 @@ const products = [
     price: 1249,
     category: "men",
     subcategory: "loose-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/11"), getOptimizedUrl("ecom-clothes-photos/male/12")],
+    images: [getLocalImageUrl("male", 11), getLocalImageUrl("male", 12)],
     sizes: ["28", "30", "32", "34", "36"],
     colors: ["Grey"],
     inStock: true,
@@ -111,7 +112,7 @@ const products = [
     price: 1299,
     category: "men",
     subcategory: "baggy-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/13"), getOptimizedUrl("ecom-clothes-photos/male/14")],
+    images: [getLocalImageUrl("male", 13), getLocalImageUrl("male", 14)],
     sizes: ["28", "30", "32", "34", "36", "38"],
     colors: ["Dark Indigo"],
     inStock: true,
@@ -125,7 +126,7 @@ const products = [
     price: 1199,
     category: "men",
     subcategory: "baggy-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/15"), getOptimizedUrl("ecom-clothes-photos/male/16")],
+    images: [getLocalImageUrl("male", 15), getLocalImageUrl("male", 16)],
     sizes: ["30", "32", "34", "36"],
     colors: ["Washed Blue"],
     inStock: true,
@@ -139,7 +140,7 @@ const products = [
     oldPrice: 1349,
     category: "men",
     subcategory: "baggy-fit",
-    images: [getOptimizedUrl("ecom-clothes-photos/male/17"), getOptimizedUrl("ecom-clothes-photos/male/18")],
+    images: [getLocalImageUrl("male", 17), getLocalImageUrl("male", 18)],
     sizes: ["28", "30", "32", "34", "36"],
     colors: ["Black"],
     inStock: true,
@@ -156,7 +157,7 @@ const products = [
     price: 1199,
     category: "women",
     subcategory: "flair-jeans",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/1"), getOptimizedUrl("ecom-clothes-photos/female/2")],
+    images: [getLocalImageUrl("female", 1), getLocalImageUrl("female", 2)],
     sizes: ["26", "28", "30", "32", "34"],
     colors: ["Dark Blue"],
     inStock: true,
@@ -170,7 +171,7 @@ const products = [
     price: 1249,
     category: "women",
     subcategory: "flair-jeans",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/3"), getOptimizedUrl("ecom-clothes-photos/female/4")],
+    images: [getLocalImageUrl("female", 3), getLocalImageUrl("female", 4)],
     sizes: ["26", "28", "30", "32"],
     colors: ["Light Blue"],
     inStock: true,
@@ -184,7 +185,7 @@ const products = [
     oldPrice: 1299,
     category: "women",
     subcategory: "flair-jeans",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/5"), getOptimizedUrl("ecom-clothes-photos/female/6")],
+    images: [getLocalImageUrl("female", 5), getLocalImageUrl("female", 6)],
     sizes: ["28", "30", "32", "34"],
     colors: ["Medium Blue"],
     inStock: true,
@@ -201,7 +202,7 @@ const products = [
     price: 1149,
     category: "women",
     subcategory: "straight-jeans",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/7"), getOptimizedUrl("ecom-clothes-photos/female/8")],
+    images: [getLocalImageUrl("female", 7), getLocalImageUrl("female", 8)],
     sizes: ["26", "28", "30", "32", "34"],
     colors: ["Classic Blue"],
     inStock: true,
@@ -214,7 +215,7 @@ const products = [
     price: 1199,
     category: "women",
     subcategory: "straight-jeans",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/9"), getOptimizedUrl("ecom-clothes-photos/female/10")],
+    images: [getLocalImageUrl("female", 9), getLocalImageUrl("female", 10)],
     sizes: ["26", "28", "30", "32"],
     colors: ["Black"],
     inStock: true,
@@ -227,7 +228,7 @@ const products = [
     price: 1099,
     category: "women",
     subcategory: "straight-jeans",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/11"), getOptimizedUrl("ecom-clothes-photos/female/12")],
+    images: [getLocalImageUrl("female", 11), getLocalImageUrl("female", 12)],
     sizes: ["28", "30", "32", "34"],
     colors: ["Light Blue"],
     inStock: true,
@@ -242,7 +243,7 @@ const products = [
     price: 1299,
     category: "women",
     subcategory: "bell-bottom",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/13"), getOptimizedUrl("ecom-clothes-photos/female/14")],
+    images: [getLocalImageUrl("female", 13), getLocalImageUrl("female", 14)],
     sizes: ["26", "28", "30", "32", "34"],
     colors: ["Dark Wash"],
     inStock: true,
@@ -257,7 +258,7 @@ const products = [
     oldPrice: 1249,
     category: "women",
     subcategory: "bell-bottom",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/15"), getOptimizedUrl("ecom-clothes-photos/female/16")],
+    images: [getLocalImageUrl("female", 15), getLocalImageUrl("female", 16)],
     sizes: ["26", "28", "30", "32"],
     colors: ["Medium Blue"],
     inStock: true,
@@ -272,7 +273,7 @@ const products = [
     price: 1349,
     category: "women",
     subcategory: "bell-bottom",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/17"), getOptimizedUrl("ecom-clothes-photos/female/18")],
+    images: [getLocalImageUrl("female", 17), getLocalImageUrl("female", 18)],
     sizes: ["28", "30", "32", "34"],
     colors: ["Black"],
     inStock: true,
@@ -287,7 +288,7 @@ const products = [
     price: 1199,
     category: "women",
     subcategory: "baggy",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/19"), getOptimizedUrl("ecom-clothes-photos/female/20")],
+    images: [getLocalImageUrl("female", 19), getLocalImageUrl("female", 20)],
     sizes: ["26", "28", "30", "32", "34"],
     colors: ["Light Wash"],
     inStock: true,
@@ -300,7 +301,7 @@ const products = [
     price: 1249,
     category: "women",
     subcategory: "baggy",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/21"), getOptimizedUrl("ecom-clothes-photos/female/22")],
+    images: [getLocalImageUrl("female", 21), getLocalImageUrl("female", 22)],
     sizes: ["26", "28", "30", "32"],
     colors: ["Dark Blue"],
     inStock: true,
@@ -315,7 +316,7 @@ const products = [
     oldPrice: 1299,
     category: "women",
     subcategory: "baggy",
-    images: [getOptimizedUrl("ecom-clothes-photos/female/23"), getOptimizedUrl("ecom-clothes-photos/female/24")],
+    images: [getLocalImageUrl("female", 23), getLocalImageUrl("female", 24)],
     sizes: ["28", "30", "32", "34"],
     colors: ["Grey"],
     inStock: true,
@@ -346,9 +347,9 @@ async function seedProducts() {
     console.log('✅ Cleared existing products');
 
     // Insert new products
-    console.log('📦 Inserting optimized products...');
+    console.log('📦 Inserting products with local images...');
     await Product.insertMany(products);
-    console.log(`✅ Successfully seeded ${products.length} products with optimized Cloudinary images`);
+    console.log(`✅ Successfully seeded ${products.length} products with local images`);
 
     // Summary
     const menCount = products.filter(p => p.category === 'men').length;
@@ -369,9 +370,8 @@ async function seedProducts() {
     console.log(`     - Baggy: 3`);
     console.log(`   Featured Products: ${featuredCount}`);
     console.log(`   On Sale: ${saleCount}`);
-    console.log('\n✨ All images are optimized with Cloudinary transformations!');
-    console.log('🚀 Images reduced to 600x750 for faster loading');
-    console.log('💡 Auto format (WebP) and quality optimization enabled');
+    console.log('\n✨ All images are served from local /public folder!');
+    console.log('🚀 Full quality original images - no compression');
 
   } catch (error) {
     console.error('❌ Error seeding products:', error);
