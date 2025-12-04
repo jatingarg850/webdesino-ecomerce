@@ -83,8 +83,8 @@ export function SiteHeader() {
 
       {/* Main Header */}
       <header className="sticky top-0 z-50 bg-white border-b shadow-sm">
-        <div className="container">
-          <div className="flex items-center justify-between py-3 gap-2">
+        <div className="container overflow-visible">
+          <div className="flex items-center justify-between py-3 gap-2 overflow-visible">
             {/* Mobile Menu Button */}
             <button
               className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
@@ -107,10 +107,10 @@ export function SiteHeader() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-8 static">
               {/* Men's Dropdown */}
               <div 
-                className="relative group"
+                className="relative static lg:relative"
                 onMouseEnter={() => setMenDropdownOpen(true)}
                 onMouseLeave={() => setMenDropdownOpen(false)}
               >
@@ -119,8 +119,8 @@ export function SiteHeader() {
                   <ChevronDown size={16} className={`transition-transform ${menDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {menDropdownOpen && (
-                  <div className="absolute top-full left-0 pt-2 z-50">
-                    <div className="bg-white border shadow-lg rounded-lg py-2 min-w-[200px]">
+                  <div className="absolute left-0 pt-2 z-[9999]" style={{ top: '100%' }}>
+                    <div className="bg-white border shadow-2xl rounded-lg py-2 min-w-[200px] max-h-[400px] overflow-y-auto">
                       <Link href="/men" className="block px-4 py-2 text-sm hover:bg-gray-100 font-semibold">
                         All Jeans
                       </Link>
@@ -144,7 +144,7 @@ export function SiteHeader() {
 
               {/* Women's Dropdown */}
               <div 
-                className="relative group"
+                className="relative static lg:relative"
                 onMouseEnter={() => setWomenDropdownOpen(true)}
                 onMouseLeave={() => setWomenDropdownOpen(false)}
               >
@@ -153,8 +153,8 @@ export function SiteHeader() {
                   <ChevronDown size={16} className={`transition-transform ${womenDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {womenDropdownOpen && (
-                  <div className="absolute top-full left-0 pt-2 z-50">
-                    <div className="bg-white border shadow-lg rounded-lg py-2 min-w-[200px]">
+                  <div className="absolute left-0 pt-2 z-[9999]" style={{ top: '100%' }}>
+                    <div className="bg-white border shadow-2xl rounded-lg py-2 min-w-[200px] max-h-[400px] overflow-y-auto">
                       <Link href="/women" className="block px-4 py-2 text-sm hover:bg-gray-100 font-semibold">
                         All Jeans
                       </Link>

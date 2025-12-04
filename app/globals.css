@@ -186,6 +186,35 @@ html {
   }
 }
 
+/* Fix for dropdown menus */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  overflow: visible !important;
+}
+
+header .container {
+  overflow: visible !important;
+}
+
+/* Ensure dropdowns don't cause page scroll */
+nav {
+  position: static;
+  overflow: visible !important;
+}
+
+nav > div {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* Dropdown positioning fix */
+nav > div > div[class*="absolute"] {
+  position: absolute !important;
+  z-index: 9999 !important;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;

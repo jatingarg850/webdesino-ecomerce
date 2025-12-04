@@ -10,6 +10,9 @@
     "seed": "tsx scripts/seed.ts",
     "seed:clothing": "tsx scripts/seed-clothing.ts",
     "seed:complete": "tsx scripts/seed-complete.ts",
+    "seed:optimized": "tsx scripts/seed-optimized-products.ts",
+    "update:subcategories": "tsx scripts/update-subcategories.ts",
+    "upload:cloudinary": "tsx scripts/upload-to-cloudinary.ts",
     "create-admin": "node scripts/create-admin.mjs"
   },
   "dependencies": {

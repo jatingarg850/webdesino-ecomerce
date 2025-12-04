@@ -9,10 +9,16 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    // Reduce image optimization memory
-    minimumCacheTTL: 60,
-    deviceSizes: [640, 750, 828, 1080, 1200],
-    imageSizes: [16, 32, 48, 64, 96],
+    // Cloudinary optimization - high quality
+    loader: 'default',
+    minimumCacheTTL: 31536000, // 1 year cache
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
+    formats: ['image/webp'],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    unoptimized: false, // Enable Next.js optimization
   },
   // Optimize for production builds
   experimental: {
