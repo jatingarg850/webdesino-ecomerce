@@ -5,11 +5,23 @@ dotenv.config({ path: '.env.local' });
 dotenv.config();
 
 // Use optimized WebP images from public folder
+// Actual female image numbers (with gaps in sequence)
+const femaleImageNumbers = [
+  3931, 3933, 3934, 3935, 3939, 3940, 3941, 3943, 3944, 3946,
+  3947, 3948, 3949, 3950, 3951, 3952, 3953, 3954, 3955, 3957,
+  3960, 3961, 3962, 3963, 3965, 3966, 3967, 3968, 3969, 3970,
+  3971, 3972, 3973, 3974, 3975, 3976, 3977
+];
+
 const getLocalImageUrl = (folder: string, imageNumber: number) => {
-  const originalName = folder === 'male' 
-    ? `IMG-20251204-WA00${String(27 + imageNumber).padStart(2, '0')}`
-    : `IMG_${3930 + imageNumber}`;
-  return `/ecom-clothes-photos-optimized/${folder}/${originalName}.webp`;
+  if (folder === 'male') {
+    const originalName = `IMG-20251204-WA00${String(27 + imageNumber).padStart(2, '0')}`;
+    return `/ecom-clothes-photos-optimized/${folder}/${originalName}.webp`;
+  } else {
+    // Use actual female image numbers from array
+    const actualNumber = femaleImageNumbers[imageNumber - 1];
+    return `/ecom-clothes-photos-optimized/${folder}/IMG_${actualNumber}.webp`;
+  }
 };
 
 // Product data with local image URLs
