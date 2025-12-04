@@ -4,13 +4,12 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 
-// Use local images from public folder
+// Use optimized WebP images from public folder
 const getLocalImageUrl = (folder: string, imageNumber: number) => {
-  const extension = folder === 'male' ? 'jpg' : 'PNG';
-  const fileName = folder === 'male' 
-    ? `IMG-20251204-WA00${String(27 + imageNumber).padStart(2, '0')}.${extension}`
-    : `IMG_${3930 + imageNumber}.${extension}`;
-  return `/ecom-clothes-photos/${folder}/${fileName}`;
+  const originalName = folder === 'male' 
+    ? `IMG-20251204-WA00${String(27 + imageNumber).padStart(2, '0')}`
+    : `IMG_${3930 + imageNumber}`;
+  return `/ecom-clothes-photos-optimized/${folder}/${originalName}.webp`;
 };
 
 // Product data with local image URLs

@@ -13,6 +13,7 @@
     "seed:optimized": "tsx scripts/seed-optimized-products.ts",
     "update:subcategories": "tsx scripts/update-subcategories.ts",
     "upload:cloudinary": "tsx scripts/upload-to-cloudinary.ts",
+    "optimize:images": "tsx scripts/optimize-images.ts",
     "create-admin": "node scripts/create-admin.mjs"
   },
   "dependencies": {
@@ -47,6 +48,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "tsx": "^4.20.6",
     "typescript": "^5"

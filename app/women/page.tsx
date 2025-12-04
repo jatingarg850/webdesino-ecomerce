@@ -100,7 +100,7 @@ function WomenPageContent() {
             </div>
           ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {filteredProducts.map((product: any) => (
+              {filteredProducts.map((product: any, index: number) => (
                 <Link
                   key={product._id}
                   href={`/products/${product._id}`}
@@ -112,6 +112,9 @@ function WomenPageContent() {
                       alt={product.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      priority={index < 4}
+                      loading={index < 4 ? 'eager' : 'lazy'}
+                      sizes="(max-width: 768px) 50vw, 25vw"
                     />
                     {product.badge && (
                       <div className="absolute top-3 left-3 bg-pink-600 text-white px-3 py-1 rounded-full text-xs font-bold">
