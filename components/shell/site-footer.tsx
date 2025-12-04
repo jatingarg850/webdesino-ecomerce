@@ -12,7 +12,7 @@ export function SiteFooter() {
             <Image
               src="/logo/logoo.png"
               alt="Pocket Mouse"
-              width={180}
+              width={40}
               height={60}
               className="h-14 w-auto brightness-0 invert"
             />

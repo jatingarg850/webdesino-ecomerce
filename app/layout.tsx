@@ -34,14 +34,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
         <link rel="icon" href="/logo/logoo.png" type="image/png" />
         <link rel="shortcut icon" href="/logo/logoo.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo/logoo.png" />
       </head>
       <body className={inter.className}>
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen flex-col overflow-x-hidden w-full">
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 w-full overflow-x-hidden">{children}</main>
           <SiteFooter />
         </div>
       </body>
