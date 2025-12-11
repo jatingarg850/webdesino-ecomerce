@@ -21,6 +21,7 @@ export default function AdminDashboard() {
     totalUsers: 0,
     totalRevenue: 0,
   });
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,6 +33,17 @@ export default function AdminDashboard() {
 
     fetchStats();
   }, [router]);
+
+  const getTimeAgo = (date: string) => {
+    const now = new Date();
+    const then = new Date(date);
+    const seconds = Math.floor((now.getTime() - then.getTime()) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)} min ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hour ago`;
+    return `${Math.floor(seconds / 86400)} day ago`;
+  };
 
   const fetchStats = async () => {
     try {
@@ -60,6 +72,40 @@ export default function AdminDashboard() {
         totalUsers: Array.isArray(users) ? users.length : 0,
         totalRevenue: revenue,
       });
+
+      // Build recent activity from real data
+      const activities: any[] = [];
+
+      // Add recent orders
+      if (Array.isArray(orders)) {
+        orders.slice(0, 3).forEach((order: any) => {
+          activities.push({
+            type: 'order',
+            title: `Order #${order.orderNumber || order._id?.toString().slice(-6)}`,
+            description: `₹${order.total || 0} - ${order.items?.length || 0} items`,
+            timestamp: order.createdAt,
+            icon: 'order',
+          });
+        });
+      }
+
+      // Add recent products
+      if (Array.isArray(products)) {
+        products.slice(0, 2).forEach((product: any) => {
+          activities.push({
+            type: 'product',
+            title: product.name,
+            description: `Added to ${product.category}`,
+            timestamp: product.createdAt,
+            icon: 'product',
+          });
+        });
+      }
+
+      // Sort by timestamp (newest first)
+      activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      
+      setRecentActivity(activities.slice(0, 5));
     } catch (error) {
       console.error('Error fetching stats:', error);
     } finally {
@@ -177,36 +223,34 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl p-6 border">
           <h3 className="text-xl font-black mb-4">Recent Activity</h3>
           <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <ShoppingCart className="text-green-600" size={20} />
+            {recentActivity.length > 0 ? (
+              recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    activity.type === 'order' 
+                      ? 'bg-green-100' 
+                      : 'bg-blue-100'
+                  }`}>
+                    {activity.type === 'order' ? (
+                      <ShoppingCart className={activity.type === 'order' ? 'text-green-600' : 'text-blue-600'} size={20} />
+                    ) : (
+                      <Package className={activity.type === 'order' ? 'text-green-600' : 'text-blue-600'} size={20} />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold">
+                      {activity.type === 'order' ? 'Order received' : 'Product added'}
+                    </p>
+                    <p className="text-sm text-gray-600">{activity.title} - {activity.description}</p>
+                  </div>
+                  <span className="text-sm text-gray-500">{getTimeAgo(activity.timestamp)}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p>No recent activity yet</p>
               </div>
-              <div className="flex-1">
-                <p className="font-semibold">New order received</p>
-                <p className="text-sm text-gray-600">Order #12345 - ₹2,499</p>
-              </div>
-              <span className="text-sm text-gray-500">2 min ago</span>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Package className="text-blue-600" size={20} />
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold">Product added</p>
-                <p className="text-sm text-gray-600">New product added to inventory</p>
-              </div>
-              <span className="text-sm text-gray-500">1 hour ago</span>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                <Users className="text-purple-600" size={20} />
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold">New user registered</p>
-                <p className="text-sm text-gray-600">john@example.com joined</p>
-              </div>
-              <span className="text-sm text-gray-500">3 hours ago</span>
-            </div>
+            )}
           </div>
         </div>
       </div>
