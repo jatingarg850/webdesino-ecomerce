@@ -79,20 +79,22 @@ export default async function Home() {
               <div className="hidden lg:flex items-center justify-end gap-4">
                 <div className="w-48 h-64 rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
                   <Image
-                    src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908725/webdesino-products/gmd0go065j8vsxzzzuf1.jpg"
+                    src="/ecom-clothes-photos-optimized/male/IMG-20251204-WA0028.webp"
                     alt="Fashion"
                     width={400}
                     height={600}
                     className="w-full h-full object-cover"
+                    priority
                   />
                 </div>
                 <div className="w-56 h-80 rounded-2xl shadow-2xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
                   <Image
-                    src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908726/webdesino-products/kmfzxc1k7btmb3ddhjdv.jpg"
+                    src="/ecom-clothes-photos-optimized/female/IMG_3931.webp"
                     alt="Fashion"
                     width={500}
                     height={700}
                     className="w-full h-full object-cover"
+                    priority
                   />
                 </div>
               </div>

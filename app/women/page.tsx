@@ -47,10 +47,11 @@ function WomenPageContent() {
       {/* Hero Banner */}
       <section className="relative h-[400px] bg-gradient-to-r from-pink-500 to-rose-600 overflow-hidden">
         <Image
-          src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908722/webdesino-products/bfox9wx3jua0ie8zu0df.jpg"
+          src="/ecom-clothes-photos-optimized/female/IMG_3931.webp"
           alt="Women's Collection"
           fill
           className="object-cover opacity-30"
+          priority
         />
         <div className="absolute inset-0 flex items-center">
           <div className="container">

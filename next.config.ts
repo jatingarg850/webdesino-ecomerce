@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    // Cloudinary optimization - high quality
-    loader: 'default',
+    // Disable optimization for standalone mode - images are pre-optimized
+    unoptimized: true,
     minimumCacheTTL: 31536000, // 1 year cache
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
@@ -18,7 +18,6 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    unoptimized: false, // Enable Next.js optimization
   },
   // Optimize for production builds
   experimental: {

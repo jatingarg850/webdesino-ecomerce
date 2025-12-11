@@ -47,10 +47,11 @@ function MenPageContent() {
       {/* Hero Banner */}
       <section className="relative h-[400px] bg-gradient-to-r from-blue-600 to-blue-800 overflow-hidden">
         <Image
-          src="https://res.cloudinary.com/dcu5kywhg/image/upload/v1763908721/webdesino-products/vnkbc2lpyedhv8alkzwp.jpg"
+          src="/ecom-clothes-photos-optimized/male/IMG-20251204-WA0028.webp"
           alt="Men's Collection"
           fill
           className="object-cover opacity-30"
+          priority
         />
         <div className="absolute inset-0 flex items-center">
           <div className="container">
