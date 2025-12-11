@@ -5,9 +5,10 @@ services:
     region: oregon
     plan: free
     buildCommand: |
-      npm ci --prefer-offline --no-audit --no-fund --loglevel=error
-      rm -rf .next
-      NODE_OPTIONS="--max-old-space-size=480" npm run build
+      npm ci --prefer-offline --no-audit --no-fund --loglevel=error --omit=dev
+      rm -rf .next node_modules/.cache
+      NODE_OPTIONS="--max-old-space-size=420 --experimental-modules" npm run build
+      npm prune --production
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
