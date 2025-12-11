@@ -51,12 +51,12 @@ export default async function Home() {
                   </span>
                 </div>
                 <h1 className="text-5xl md:text-7xl font-black leading-tight">
-                  NEW IN
+               POCKET MOUSE
                   <br />
-                  <span className="text-gray-600">SHOP FRESH STYLES</span>
+                  <span className="text-gray-600">Soul of Korea</span>
                 </h1>
                 <p className="text-lg text-gray-600 max-w-md">
-                  Discover the latest trends in fashion. Premium quality, unbeatable prices.
+                  
                 </p>
                 <div className="flex gap-4">
                   <Link
