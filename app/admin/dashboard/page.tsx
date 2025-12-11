@@ -41,9 +41,14 @@ export default function AdminDashboard() {
         fetch('/api/admin/users'),
       ]);
 
-      const products = await productsRes.json();
-      const orders = await ordersRes.json();
-      const users = await usersRes.json();
+      const productsData = await productsRes.json();
+      const ordersData = await ordersRes.json();
+      const usersData = await usersRes.json();
+
+      // Extract arrays from response objects
+      const products = productsData.products || [];
+      const orders = ordersData.orders || [];
+      const users = usersData.users || [];
 
       const revenue = Array.isArray(orders)
         ? orders.reduce((sum: number, order: any) => sum + (order.total || 0), 0)

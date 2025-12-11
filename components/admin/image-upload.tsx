@@ -10,6 +10,51 @@ interface ImageUploadProps {
   maxImages?: number;
 }
 
+// Compress image before upload
+const compressImage = (file: File): Promise<Blob> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        // Resize if too large
+        const maxWidth = 1200;
+        const maxHeight = 1200;
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob || file);
+          },
+          'image/webp',
+          0.8 // 80% quality
+        );
+      };
+    };
+  });
+};
+
 export default function ImageUpload({ value = [], onChange, maxImages = 5 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
 
@@ -26,8 +71,11 @@ export default function ImageUpload({ value = [], onChange, maxImages = 5 }: Ima
 
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
+        // Compress image first
+        const compressedBlob = await compressImage(file);
+        
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', compressedBlob, 'image.webp');
         formData.append('folder', 'products');
 
         const response = await fetch('/api/upload-cloudinary', {
@@ -36,7 +84,8 @@ export default function ImageUpload({ value = [], onChange, maxImages = 5 }: Ima
         });
 
         if (!response.ok) {
-          throw new Error('Upload failed');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Upload failed');
         }
 
         const data = await response.json();
@@ -47,7 +96,7 @@ export default function ImageUpload({ value = [], onChange, maxImages = 5 }: Ima
       onChange([...value, ...urls]);
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Failed to upload images');
+      alert(`Failed to upload images: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setUploading(false);
     }
