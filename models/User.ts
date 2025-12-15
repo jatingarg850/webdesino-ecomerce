@@ -2,8 +2,12 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IUser extends Document {
   name: string;
-  email: string;
-  password: string;
+  email?: string;
+  phone: string;
+  password?: string;
+  otp?: string;
+  otpExpiry?: Date;
+  isPhoneVerified: boolean;
   role: 'USER' | 'ADMIN';
   image?: string;
   wishlist: mongoose.Types.ObjectId[];
@@ -30,8 +34,12 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  email: { type: String, sparse: true, unique: true },
+  phone: { type: String, required: true, unique: true },
+  password: String,
+  otp: String,
+  otpExpiry: Date,
+  isPhoneVerified: { type: Boolean, default: false },
   role: { type: String, enum: ['USER', 'ADMIN'], default: 'USER' },
   image: String,
   wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }],

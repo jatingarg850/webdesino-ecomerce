@@ -10,8 +10,10 @@ export default function AccountPage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const userData = localStorage.getItem('user');
     if (!userData) {
       setShowAuthModal(true);
@@ -26,16 +28,29 @@ export default function AccountPage() {
     router.push('/');
   };
 
-  if (showAuthModal) {
+  if (!mounted) {
     return (
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => {
-          setShowAuthModal(false);
-          router.push('/');
-        }}
-        defaultTab="login"
-      />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-black mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <AuthModal 
+          isOpen={showAuthModal} 
+          onClose={() => {
+            setShowAuthModal(false);
+            router.push('/');
+          }}
+          defaultTab="login"
+        />
+      </div>
     );
   }
 
