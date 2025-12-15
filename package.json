@@ -14,7 +14,8 @@
     "update:subcategories": "tsx scripts/update-subcategories.ts",
     "upload:cloudinary": "tsx scripts/upload-to-cloudinary.ts",
     "optimize:images": "tsx scripts/optimize-images.ts",
-    "create-admin": "node scripts/create-admin.mjs"
+    "create-admin": "node scripts/create-admin.mjs",
+    "fix:email-index": "tsx scripts/fix-user-email-index.ts"
   },
   "dependencies": {
     "@stripe/stripe-js": "^8.4.0",

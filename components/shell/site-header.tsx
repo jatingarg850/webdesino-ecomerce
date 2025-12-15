@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ShoppingBag, Search, User, Heart, Menu, X, MapPin, Gift, ChevronDown } from "lucide-react";
 
 import { useCartStore } from "@/lib/store";
+import { CartBadge } from "./cart-badge";
 
 export function SiteHeader() {
   const router = useRouter();
@@ -14,19 +15,12 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState<any>(null);
-  const [mounted, setMounted] = useState(false);
   const [menDropdownOpen, setMenDropdownOpen] = useState(false);
   const [womenDropdownOpen, setWomenDropdownOpen] = useState(false);
   const [menSubcategories, setMenSubcategories] = useState<any[]>([]);
   const [womenSubcategories, setWomenSubcategories] = useState<any[]>([]);
   const [mobileMenOpen, setMobileMenOpen] = useState(false);
   const [mobileWomenOpen, setMobileWomenOpen] = useState(false);
-  const cartCount = useCartStore((state) => state.getItemCount());
-
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Check if user is logged in
   useEffect(() => {
@@ -232,11 +226,7 @@ export function SiteHeader() {
                 aria-label="Cart"
               >
                 <ShoppingBag size={19} className="md:w-5 md:h-5" />
-                {mounted && cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-red-600 text-white text-[10px] min-w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold">
-                    {cartCount}
-                  </span>
-                )}
+                <CartBadge />
               </Link>
             </div>
           </div>

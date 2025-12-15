@@ -107,9 +107,14 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
 
       console.log('📱 Parsed OTP response:', { status: response.status, data, ok: response.ok });
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         setStep('otp');
         setOtpTimer(60); // 60 seconds timer
+        
+        // Show test OTP in development
+        if (data.testOtp) {
+          console.log(`📱 Development mode - Test OTP: ${data.testOtp}`);
+        }
         
         // Start countdown
         const interval = setInterval(() => {
@@ -123,7 +128,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
         }, 1000);
       } else {
         console.error('❌ OTP send failed:', { status: response.status, data });
-        setError(data.error || `Failed to send OTP (Status: ${response.status})`);
+        const errorMsg = (data?.error as string) || (data?.message as string) || `Failed to send OTP (Status: ${response.status})`;
+        setError(errorMsg);
       }
     } catch (error) {
       console.error('❌ Send OTP error:', error);
@@ -192,11 +198,27 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
         }),
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+      let data: { error?: string; success?: boolean; testOtp?: string; [key: string]: unknown } = {};
+      
+      if (responseText) {
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('❌ Failed to parse resend response:', parseError);
+          setError('Server error: Invalid response format');
+          setLoading(false);
+          return;
+        }
+      }
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         setOtp('');
         setOtpTimer(60);
+        
+        if (data.testOtp) {
+          console.log(`📱 Development mode - Test OTP: ${data.testOtp}`);
+        }
         
         // Start countdown
         const interval = setInterval(() => {
@@ -209,7 +231,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
           });
         }, 1000);
       } else {
-        setError(data.error || 'Failed to resend OTP');
+        const errorMsg = (data?.error as string) || (data?.message as string) || 'Failed to resend OTP';
+        setError(errorMsg);
       }
     } catch (error) {
       console.error('Resend OTP error:', error);

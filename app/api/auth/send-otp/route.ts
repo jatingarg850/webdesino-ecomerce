@@ -15,7 +15,7 @@ async function sendOTP(phone: string, otp: string): Promise<boolean> {
     const countryCode = process.env.AUTHKEY_COUNTRY_CODE || '91';
 
     if (!authkey) {
-      console.error('AUTHKEY_API_KEY not configured');
+      console.error('❌ AUTHKEY_API_KEY not configured');
       return false;
     }
 
@@ -39,10 +39,22 @@ async function sendOTP(phone: string, otp: string): Promise<boolean> {
       body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
-    console.log('✅ AuthKey.io response:', data);
+    console.log('📱 AuthKey response status:', response.status);
     
-    return response.ok;
+    const responseText = await response.text();
+    console.log('📱 AuthKey raw response:', responseText);
+    
+    let data;
+    try {
+      data = JSON.parse(responseText);
+      console.log('✅ AuthKey.io parsed response:', data);
+    } catch (parseError) {
+      console.error('❌ Failed to parse AuthKey response:', parseError);
+      console.error('❌ Response text:', responseText);
+      return false;
+    }
+    
+    return response.ok && data;
   } catch (error) {
     console.error('❌ Error sending OTP:', error);
     return false;
@@ -106,15 +118,34 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      console.log(`📱 Creating new user: ${name}, ${phone}`);
-      user = await User.create({
-        name,
-        phone,
-        otp,
-        otpExpiry,
-        isPhoneVerified: false,
-      });
-      console.log(`✅ User created: ${user._id}`);
+      try {
+        console.log(`📱 Creating new user: ${name}, ${phone}`);
+        user = await User.create({
+          name,
+          phone,
+          otp,
+          otpExpiry,
+          isPhoneVerified: false,
+        });
+        console.log(`✅ User created: ${user._id}`);
+      } catch (createError: any) {
+        // Handle duplicate key error on email (null values)
+        if (createError.code === 11000 && createError.keyPattern?.email) {
+          console.warn('⚠️ Duplicate email (null) - finding existing user by phone');
+          user = await User.findOne({ phone });
+          if (user) {
+            console.log(`📱 Found existing user by phone: ${user._id}`);
+            user.otp = otp;
+            user.otpExpiry = otpExpiry;
+            await user.save();
+            console.log(`✅ User updated with new OTP`);
+          } else {
+            throw createError;
+          }
+        } else {
+          throw createError;
+        }
+      }
     } else {
       // Update existing user with new OTP
       console.log(`📱 Updating existing user: ${user._id}`);
@@ -138,15 +169,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In development, allow OTP even if send fails
+    // In development, allow OTP even if send fails (for testing)
     if (!otpSent && process.env.NODE_ENV !== 'production') {
-      console.log(`📱 Development mode: OTP send failed but continuing`);
+      console.warn(`⚠️ Development mode: OTP send failed but continuing. OTP for testing: ${otp}`);
     }
 
     const responseData = {
       success: true,
       message: 'OTP sent successfully',
       phone: phone,
+      ...(process.env.NODE_ENV !== 'production' && !otpSent && { testOtp: otp }),
     };
     
     console.log(`✅ Sending success response:`, responseData);
