@@ -92,7 +92,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
       const responseText = await response.text();
       console.log('📱 Raw response text:', responseText);
 
-      let data = {};
+      let data: { error?: string; [key: string]: unknown } = {};
       if (responseText) {
         try {
           data = JSON.parse(responseText);
@@ -123,7 +123,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
         }, 1000);
       } else {
         console.error('❌ OTP send failed:', { status: response.status, data });
-        setError(data?.error || `Failed to send OTP (Status: ${response.status})`);
+        setError(data.error || `Failed to send OTP (Status: ${response.status})`);
       }
     } catch (error) {
       console.error('❌ Send OTP error:', error);
@@ -315,7 +315,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
                     onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                     className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                     placeholder="9876543210"
-                    maxLength="10"
+                    maxLength={10}
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">We'll send you an OTP to verify your number</p>
@@ -339,7 +339,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-center text-2xl tracking-widest"
                   placeholder="000000"
-                  maxLength="6"
+                  maxLength={6}
                 />
                 <p className="text-xs text-gray-500 mt-2">
                   OTP sent to +91{phone}

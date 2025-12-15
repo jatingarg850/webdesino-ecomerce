@@ -187,7 +187,7 @@ export default function AdminLogin() {
                     onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                     className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                     placeholder="9876543210"
-                    maxLength="10"
+                    maxLength={10}
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">We'll send you an OTP to verify your identity</p>
@@ -219,7 +219,7 @@ export default function AdminLogin() {
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-center text-2xl tracking-widest"
                   placeholder="000000"
-                  maxLength="6"
+                  maxLength={6}
                 />
                 <p className="text-xs text-gray-500 mt-2">
                   OTP sent to +91{phone}
