@@ -32,14 +32,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
         <link rel="icon" href="/logo/logoo.png" type="image/png" />
         <link rel="shortcut icon" href="/logo/logoo.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo/logoo.png" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <div className="flex min-h-screen flex-col overflow-x-hidden w-full">
           <SiteHeader />
           <main className="flex-1 w-full overflow-x-hidden">{children}</main>

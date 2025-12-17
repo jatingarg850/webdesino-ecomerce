@@ -15,6 +15,7 @@
     "upload:cloudinary": "tsx scripts/upload-to-cloudinary.ts",
     "optimize:images": "tsx scripts/optimize-images.ts",
     "create-admin": "node scripts/create-admin.mjs",
+    "create-admin-user": "tsx scripts/create-admin-user.ts",
     "fix:email-index": "tsx scripts/fix-user-email-index.ts"
   },
   "dependencies": {

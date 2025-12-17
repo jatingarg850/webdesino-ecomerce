@@ -2,151 +2,52 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, Phone, Eye, EyeOff } from 'lucide-react';
+import { Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function AdminLogin() {
   const router = useRouter();
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [otpTimer, setOtpTimer] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
   
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
+  const [adminId, setAdminId] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleSendOTP = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      // Validate phone number
-      const phoneRegex = /^[6-9]\d{9}$/;
-      if (!phoneRegex.test(phone)) {
-        setError('Please enter a valid 10-digit phone number');
+      if (!adminId.trim() || !password.trim()) {
+        setError('Admin ID and password are required');
         setLoading(false);
         return;
       }
 
-      const response = await fetch('/api/auth/send-otp', {
+      const response = await fetch('/api/auth/admin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          phone,
-          name: 'Admin',
+          adminId: adminId.trim(),
+          password,
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setStep('otp');
-        setOtpTimer(60);
-        
-        // Start countdown
-        const interval = setInterval(() => {
-          setOtpTimer(prev => {
-            if (prev <= 1) {
-              clearInterval(interval);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
-      } else {
-        setError(data.error || 'Failed to send OTP');
-      }
-    } catch (error) {
-      console.error('Send OTP error:', error);
-      setError('Failed to send OTP. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      if (!otp || otp.length !== 6) {
-        setError('Please enter a valid 6-digit OTP');
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone,
-          otp,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Check if user is admin
-        if (data.user?.role !== 'ADMIN') {
-          setError('Access denied. Admin privileges required.');
-          setLoading(false);
-          return;
-        }
-
         // Store admin session
         localStorage.setItem('adminUser', JSON.stringify(data.user));
         
         // Redirect to admin dashboard
         router.push('/admin/dashboard');
       } else {
-        setError(data.error || 'OTP verification failed');
+        setError(data.error || 'Login failed');
       }
     } catch (error) {
-      console.error('Verify OTP error:', error);
-      setError('OTP verification failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendOTP = async () => {
-    setError('');
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone,
-          name: 'Admin',
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setOtp('');
-        setOtpTimer(60);
-        
-        // Start countdown
-        const interval = setInterval(() => {
-          setOtpTimer(prev => {
-            if (prev <= 1) {
-              clearInterval(interval);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
-      } else {
-        setError(data.error || 'Failed to resend OTP');
-      }
-    } catch (error) {
-      console.error('Resend OTP error:', error);
-      setError('Failed to resend OTP. Please try again.');
+      console.error('Login error:', error);
+      setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -161,9 +62,7 @@ export default function AdminLogin() {
             <Lock className="text-white" size={32} />
           </div>
           <h1 className="text-3xl font-black mb-2">Admin Portal</h1>
-          <p className="text-gray-600">
-            {step === 'phone' ? 'Sign in with your phone number' : 'Enter the OTP sent to your phone'}
-          </p>
+          <p className="text-gray-600">Sign in with your admin credentials</p>
         </div>
 
         {/* Login Form */}
@@ -174,103 +73,58 @@ export default function AdminLogin() {
             </div>
           )}
 
-          {step === 'phone' ? (
-            <form onSubmit={handleSendOTP} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold mb-2">Phone Number</label>
-                <div className="flex gap-2">
-                  <span className="px-4 py-3 border rounded-lg bg-gray-50 text-gray-600 font-semibold">+91</span>
-                  <input
-                    type="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                    className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="9876543210"
-                    maxLength={10}
-                  />
-                </div>
-                <p className="text-xs text-gray-500 mt-2">We'll send you an OTP to verify your identity</p>
-              </div>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold mb-2">Admin ID</label>
+              <input
+                type="text"
+                required
+                value={adminId}
+                onChange={(e) => setAdminId(e.target.value)}
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Enter your admin ID"
+                disabled={loading}
+              />
+            </div>
 
-              <button
-                type="submit"
-                disabled={loading || phone.length !== 10}
-                className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Sending OTP...
-                  </span>
-                ) : (
-                  'Send OTP'
-                )}
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handleVerifyOTP} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold mb-2">Enter OTP</label>
+            <div>
+              <label className="block text-sm font-semibold mb-2">Password</label>
+              <div className="relative">
                 <input
-                  type="text"
+                  type={showPassword ? 'text' : 'password'}
                   required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-center text-2xl tracking-widest"
-                  placeholder="000000"
-                  maxLength={6}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  placeholder="Enter your password"
+                  disabled={loading}
                 />
-                <p className="text-xs text-gray-500 mt-2">
-                  OTP sent to +91{phone}
-                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-gray-600 hover:text-gray-800"
+                  disabled={loading}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
+            </div>
 
-              <button
-                type="submit"
-                disabled={loading || otp.length !== 6}
-                className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Verifying...
-                  </span>
-                ) : (
-                  'Verify OTP'
-                )}
-              </button>
-
-              <div className="text-center">
-                {otpTimer > 0 ? (
-                  <p className="text-sm text-gray-600">
-                    Resend OTP in <span className="font-semibold">{otpTimer}s</span>
-                  </p>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleResendOTP}
-                    disabled={loading}
-                    className="text-sm text-blue-600 hover:text-blue-700 font-semibold disabled:opacity-50"
-                  >
-                    Resend OTP
-                  </button>
-                )}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setStep('phone');
-                  setOtp('');
-                  setError('');
-                }}
-                className="w-full text-sm text-gray-600 hover:text-black py-2"
-              >
-                Use Different Phone Number
-              </button>
-            </form>
-          )}
+            <button
+              type="submit"
+              disabled={loading || !adminId.trim() || !password.trim()}
+              className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Signing in...
+                </span>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
         </div>
 
         {/* Info note */}

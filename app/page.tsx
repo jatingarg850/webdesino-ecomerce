@@ -1,5 +1,3 @@
-'use server';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight, ArrowRight } from 'lucide-react';
